@@ -5,7 +5,6 @@ import { Dropdown } from 'react-native-material-dropdown';
 import { mainCategoriesList, subCategoriesList } from '../../backend/data/CategoriesList'
 
 
-
 export default class Filter extends Component {
 
   constructor() {
@@ -18,6 +17,7 @@ export default class Filter extends Component {
 
     this.onChangeTextCategories = this.onChangeTextCategories.bind(this)
     this.onChangeTextSubCategories = this.onChangeTextSubCategories.bind(this)
+    this.onPress = this.onPress.bind(this)
   }
 
 
@@ -33,16 +33,19 @@ export default class Filter extends Component {
 
     this.setState({
       subCatList: subCat,
-      selectedCategoty:data[index]
+      selectedCategoty: data[index]
     })
-
-
   }
 
   onChangeTextSubCategories(value, index, data) {
     this.setState({
       selectedSubCategoty: data[index]
     })
+  }
+
+  onPress() {
+    console.log(this.state.selectedCategoty)
+    console.log(this.state.selectedSubCategoty)
   }
 
   render() {
@@ -115,7 +118,7 @@ export default class Filter extends Component {
               />
             </View>
             <View style={{ marginBottom: 10 }}>
-              <TouchableOpacity style={styles.btn}>
+              <TouchableOpacity style={styles.btn} onPress={this.onPress}>
                 <Text style={styles.textcolor}>Apply</Text>
               </TouchableOpacity>
             </View>
