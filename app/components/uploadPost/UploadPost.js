@@ -14,71 +14,127 @@ import { Header, Left, Right, Icon, Button, Title, Body } from "native-base";
 import FAIcon from "react-native-vector-icons/FontAwesome";
 import { Dropdown } from "react-native-material-dropdown";
 
-import ImagePicker from 'react-native-image-picker';
+import {
+  connectFirebase,
+  saveDataWithoutDocId,
+  uploadImage
+} from "../../backend/firebase/utility";
 
+import ImagePicker from "react-native-image-picker";
+import GetLocation from 'react-native-get-location';
 
 export default class UploadPost extends Component {
- 
   static navigationOptions = {
     header: null
   };
-  state={
-    imageSource:require("../../assets/upload.png")
-  }
 
-  constructor(props){
-    super(props)
-    this.onPress = this.onPress.bind(this)
-  }
 
-  
-  onPress(){
-    console.log("Select image")
-    const options = {
-      // title: 'Select Avatar',
-      // customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
-      // storageOptions: {
-      //   skipBackup: true,
-      //   path: 'images',
-      // },
+  constructor(props) {
+    super(props);
+    this.selectImage = this.selectImage.bind(this);
+    this.uploadPost = this.uploadPost.bind(this);
+    this.selectLocation = this.selectLocation.bind(this);
+
+    let data = [
+      { value: "Option 1" },
+      { value: "Option 2" },
+      { value: "Option 3" }
+    ];
+
+    this.state = {
+      imageSource: require("../../assets/upload.png"),
+      deliveryPickupOptionData: data,
+      deliveryPickupOption: data[0],
+
+      titleText: '',
+      descriptionText: '',
+      dailyRateText: '',
+      weeklyDiscountText: '',
+      deliveryFeeText: '',
+      zipCodeText: '',
+      taxesText: '',
+      location: '',
+      deliveryPickupOption: ''
     };
+  }
 
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-    
+  selectImage() {
+    ImagePicker.showImagePicker({}, response => {
+      console.log("Response = ", response);
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        console.log("User cancelled image picker");
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
+        console.log("ImagePicker Error: ", response.error);
       } else {
         const source = { uri: response.uri };
-    
         // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-    
+        // const source = { uri: "data:image/jpeg;base64," + response.data };
         this.setState({
-          imageSource: source,
+          imageSource: source
         });
-
       }
     });
   }
 
+  selectLocation() {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 15000,
+    })
+      .then(location => {
+        console.log(location);
+        this.setState({
+          location: {
+            accuracy: location.accuracy,
+            latitude: location.latitude,
+            longitude: location.longitude
+          }
+        }
+        )
+      })
+      .catch(error => {
+        const { code, message } = error;
+        console.warn(code, message);
+      })
+  }
+
+  uploadPost() {
+    connectFirebase()
+    postData = {
+      title: this.state.titleText,
+      description: this.state.descriptionText,
+      dailyRate: this.state.dailyRateText,
+      weeklyDiscount: this.state.weeklyDiscountText,
+      deliveryFee: this.state.deliveryFeeText,
+      zipCode: this.state.zipCodeText,
+      taxes: this.state.taxesText,
+      location: this.state.location,
+      deliveryPickupOption: this.state.deliveryPickupOption
+    };
+
+    // let docRef = 
+    saveDataWithoutDocId('posts', postData)
+      .then(docRef => {
+        // console.log(docRef)
+        // console.log(postData);
+        // console.log(docRef.id)
+
+        let name = docRef.id + ".jpg";
+        let path = 'posts/' + name;
+
+        // console.log(name, path)
+        uploadImage(this.state.imageSource.uri, 'image/jpeg', path, name, 'posts', docRef, false)
+        
+      })
+      .catch(error => {
+        const { code, message } = error;
+        console.warn(code, message);
+      })
+  }
+
   render() {
-    
-    let data = [
-      {
-        value: "Option 1"
-      },
-      {
-        value: "Option 2"
-      },
-      {
-        value: "Option 3"
-      }
-    ];
+
+
     return (
       <View style={styles.container}>
         <Header style={{ backgroundColor: "#1b96fe" }}>
@@ -122,7 +178,7 @@ export default class UploadPost extends Component {
                   name="camera"
                   size={42}
                   style={{ color: "#1b96fe", height: 60 }}
-                  onPress={this.onPress}
+                  onPress={this.selectImage}
                 />
               </TouchableOpacity>
             </View>
@@ -133,6 +189,7 @@ export default class UploadPost extends Component {
               autoCapitalize="none"
               returnKeyType="next"
               style={styles.textbox1}
+              onChangeText={titleText => this.setState({ titleText })}
               autoCorrect={false}
             />
 
@@ -143,6 +200,9 @@ export default class UploadPost extends Component {
               autoCapitalize="none"
               returnKeyType="next"
               style={styles.textbox1}
+              onChangeText={descriptionText =>
+                this.setState({ descriptionText })
+              }
               autoCorrect={false}
             />
 
@@ -153,6 +213,7 @@ export default class UploadPost extends Component {
               autoCapitalize="none"
               returnKeyType="next"
               style={styles.textbox1}
+              onChangeText={dailyRateText => this.setState({ dailyRateText })}
               autoCorrect={false}
             />
 
@@ -163,12 +224,23 @@ export default class UploadPost extends Component {
               autoCapitalize="none"
               returnKeyType="next"
               style={styles.textbox1}
+              onChangeText={weeklyDiscountText =>
+                this.setState({ weeklyDiscountText })
+              }
               autoCorrect={false}
             />
 
             <Text style={styles.heading}>Delivery Option</Text>
             <View style={styles.selectBox}>
-              <Dropdown label="Select Delivery / Pickup" data={data} />
+              <Dropdown
+                label="Select Delivery / Pickup"
+                data={this.state.deliveryPickupOptionData}
+                value={this.state.deliveryPickupOption.value}
+                onChangeText={(value, index, data) => {
+                  this.setState({
+                    deliveryPickupOption: data[index]
+                  })
+                }} />
             </View>
             <Text style={styles.heading}>Delivery Fee</Text>
             <TextInput
@@ -177,6 +249,9 @@ export default class UploadPost extends Component {
               autoCapitalize="none"
               returnKeyType="next"
               style={styles.textbox1}
+              onChangeText={deliveryFeeText =>
+                this.setState({ deliveryFeeText })
+              }
               autoCorrect={false}
             />
 
@@ -189,11 +264,12 @@ export default class UploadPost extends Component {
                   autoCapitalize="none"
                   returnKeyType="next"
                   style={styles.textboxLoc}
+                  onChangeText={zipCodeText => this.setState({ zipCodeText })}
                   autoCorrect={false}
                 />
               </View>
               <View>
-                <TouchableOpacity style={styles.btnLoc}>
+                <TouchableOpacity style={styles.btnLoc} onPress={this.selectLocation}>
                   <Text style={styles.textcolor}>Get My Location</Text>
                 </TouchableOpacity>
               </View>
@@ -201,15 +277,16 @@ export default class UploadPost extends Component {
 
             <Text style={styles.heading}>Taxes(If Applicable)</Text>
             <TextInput
-              placeholder="The Price of delivery"
+              placeholder="Taxes"
               keyboardAppearance="default"
               autoCapitalize="none"
               returnKeyType="next"
               style={styles.textbox1}
+              onChangeText={taxesText => this.setState({ taxesText })}
               autoCorrect={false}
             />
 
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={this.uploadPost}>
               <Text style={styles.textcolor1}>Upload Post</Text>
             </TouchableOpacity>
           </KeyboardAvoidingView>

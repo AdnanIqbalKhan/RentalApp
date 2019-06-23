@@ -107,6 +107,7 @@ export async function updateData(collection, doc, jsonObject){
 export async function saveDataWithoutDocId(collection, jsonObject){
   let docRef = await firebase.firestore().collection(collection).doc();
   await docRef.set(jsonObject);
+  console.log(docRef)
   return docRef;
 }
 
