@@ -36,7 +36,6 @@ export default class UploadPost extends Component {
     this.uploadPost = this.uploadPost.bind(this);
     this.selectLocation = this.selectLocation.bind(this);
     this.onChangeTextCategories = this.onChangeTextCategories.bind(this)
-    this.onChangeTextSubCategories = this.onChangeTextSubCategories.bind(this)
 
     let deliveryOptions = [
       { value: "Pickup" },
@@ -79,12 +78,6 @@ export default class UploadPost extends Component {
     this.setState({
       subCatList: subCat,
       selectedCategory: data[index]
-    })
-  }
-
-  onChangeTextSubCategories(value, index, data) {
-    this.setState({
-      selectedSubCategory: data[index]
     })
   }
 
@@ -140,8 +133,8 @@ export default class UploadPost extends Component {
       taxes: this.state.taxesText,
       location: this.state.location,
       deliveryPickupOption: this.state.deliveryPickupOption,
-      category:this.state.selectedCategory,
-      subCategory:this.state.selectedSubCategory
+      category: this.state.selectedCategory,
+      subCategory: this.state.selectedSubCategory
     };
 
     saveDataWithoutDocId('posts', postData)
@@ -268,7 +261,11 @@ export default class UploadPost extends Component {
               <Dropdown
                 label='Select Sub Category'
                 data={this.state.subCatList}
-                onChangeText={this.onChangeTextSubCategories}
+                onChangeText={(value, index, data) => {
+                  this.setState({
+                    selectedSubCategory: data[index]
+                  })
+                }}
               />
             </View>
 

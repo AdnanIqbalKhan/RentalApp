@@ -9,20 +9,45 @@ export default class Filter extends Component {
 
   constructor() {
     super()
+
+    let sOptions = [
+      { value: "Category" },
+      { value: "Rating" },
+      { value: "Price" },
+      { value: "Delivery" },
+      { value: "Pickup" }
+    ]
+    let distanceOptions = [
+      { value: 5, label: "5 miles" },
+      { value: 10, label: "10 miles" },
+      { value: 15, label: "15 miles" },
+      { value: 20, label: "20 miles" },
+      { value: 25, label: "25 miles" },
+      { value: 50, label: "50 miles" },
+      { value: 100, label: "100 miles" },
+      { value: 150, label: "150 miles" },
+      { value: 200, label: "200 miles" }
+    ]
+
+
     this.state = {
       subCatList: [],
       selectedCategoty: null,
-      selectedSubCategoty: null
+      selectedSubCategoty: null,
+
+      sortOptions: sOptions,
+      selectedSort: sOptions[0].value,
+
+      maxDistanceOptions: distanceOptions,
+      selectedMaxDistance: distanceOptions[0].value
     }
 
     this.onChangeTextCategories = this.onChangeTextCategories.bind(this)
-    this.onChangeTextSubCategories = this.onChangeTextSubCategories.bind(this)
     this.onPress = this.onPress.bind(this)
   }
 
 
   onChangeTextCategories(value, index, data) {
-
     var id = data[index].id
     let temp = subCategoriesList.filter(function (n) {
       return n.mainCategoryId == id;
@@ -37,11 +62,6 @@ export default class Filter extends Component {
     })
   }
 
-  onChangeTextSubCategories(value, index, data) {
-    this.setState({
-      selectedSubCategoty: data[index]
-    })
-  }
 
   onPress() {
     console.log(this.state.selectedCategoty)
@@ -66,7 +86,12 @@ export default class Filter extends Component {
             <View style={styles.PickerStyle}>
               <Dropdown
                 label='Sort By'
-                data={data}
+                data={this.state.sortOptions}
+                onChangeText={(value, index, data) => {
+                  this.setState({
+                    selectedSort: data[index].value
+                  })
+                }}
               />
             </View>
             <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: '500', marginTop: 5 }}>Display</Text>
@@ -108,13 +133,22 @@ export default class Filter extends Component {
               <Dropdown
                 label='Select Sub Category'
                 data={this.state.subCatList}
-                onChangeText={this.onChangeTextSubCategories}
+                onChangeText={(value, index, data) => {
+                  this.setState({
+                    selectedSubCategoty: data[index]
+                  })
+                }}
               />
             </View>
             <View style={styles.PickerStyle}>
               <Dropdown
                 label='Select Max Distance'
-                data={data}
+                data={this.state.maxDistanceOptions}
+                onChangeText={(value) => {
+                  this.setState({
+                    selectedMaxDistance: value
+                  })
+                }}
               />
             </View>
             <View style={{ marginBottom: 10 }}>
