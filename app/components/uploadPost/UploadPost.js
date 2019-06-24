@@ -14,6 +14,7 @@ import { Header, Left, Right, Icon, Button, Title, Body } from "native-base";
 import FAIcon from "react-native-vector-icons/FontAwesome";
 import { Dropdown } from "react-native-material-dropdown";
 
+import { mainCategoriesList, subCategoriesList } from '../../backend/data/CategoriesList'
 import {
   connectFirebase,
   saveDataWithoutDocId,
@@ -34,17 +35,21 @@ export default class UploadPost extends Component {
     this.selectImage = this.selectImage.bind(this);
     this.uploadPost = this.uploadPost.bind(this);
     this.selectLocation = this.selectLocation.bind(this);
+    this.onChangeTextCategories = this.onChangeTextCategories.bind(this)
+    this.onChangeTextSubCategories = this.onChangeTextSubCategories.bind(this)
 
-    let data = [
-      { value: "Option 1" },
-      { value: "Option 2" },
-      { value: "Option 3" }
+    let deliveryOptions = [
+      { value: "Pickup" },
+      { value: "Delivery" },
+      { value: "Pickup and Delivery" },
+      { value: "Exchange Post Delivery" },
+      { value: "Exchange Post Delivery and Pickup" }
     ];
 
     this.state = {
       imageSource: require("../../assets/upload.png"),
-      deliveryPickupOptionData: data,
-      deliveryPickupOption: data[0],
+      deliveryPickupOptionData: deliveryOptions,
+      deliveryPickupOption: deliveryOptions[0],
 
       titleText: '',
       descriptionText: '',
@@ -54,8 +59,33 @@ export default class UploadPost extends Component {
       zipCodeText: '',
       taxesText: '',
       location: '',
-      deliveryPickupOption: ''
+      deliveryPickupOption: '',
+
+      subCatList: [],
+      selectedCategory: { value: mainCategoriesList[0].name, id: mainCategoriesList[0].id },
+      selectedSubCategory: { value: subCategoriesList[0].name, id: subCategoriesList[0].id }
     };
+  }
+
+  onChangeTextCategories(value, index, data) {
+    var id = data[index].id
+    let temp = subCategoriesList.filter(function (n) {
+      return n.mainCategoryId == id;
+    });
+    let subCat = temp.map(n => {
+      return { value: n.name, id: n.id }
+    });
+
+    this.setState({
+      subCatList: subCat,
+      selectedCategory: data[index]
+    })
+  }
+
+  onChangeTextSubCategories(value, index, data) {
+    this.setState({
+      selectedSubCategory: data[index]
+    })
   }
 
   selectImage() {
@@ -109,22 +139,17 @@ export default class UploadPost extends Component {
       zipCode: this.state.zipCodeText,
       taxes: this.state.taxesText,
       location: this.state.location,
-      deliveryPickupOption: this.state.deliveryPickupOption
+      deliveryPickupOption: this.state.deliveryPickupOption,
+      category:this.state.selectedCategory,
+      subCategory:this.state.selectedSubCategory
     };
 
-    // let docRef = 
     saveDataWithoutDocId('posts', postData)
       .then(docRef => {
-        // console.log(docRef)
-        // console.log(postData);
-        // console.log(docRef.id)
-
         let name = docRef.id + ".jpg";
         let path = 'posts/' + name;
-
-        // console.log(name, path)
         uploadImage(this.state.imageSource.uri, 'image/jpeg', path, name, 'posts', docRef, false)
-        
+
       })
       .catch(error => {
         const { code, message } = error;
@@ -133,7 +158,7 @@ export default class UploadPost extends Component {
   }
 
   render() {
-
+    let categoriesList = mainCategoriesList.map(n => { return { value: n.name, id: n.id } });
 
     return (
       <View style={styles.container}>
@@ -229,6 +254,23 @@ export default class UploadPost extends Component {
               }
               autoCorrect={false}
             />
+
+            <Text style={styles.heading}>Category Selection</Text>
+            <View style={styles.selectBox}>
+              <Dropdown
+                label='Select Category'
+                data={categoriesList}
+                onChangeText={this.onChangeTextCategories}
+              />
+            </View>
+            <Text style={styles.heading}>Subcategory Selection</Text>
+            <View style={styles.selectBox}>
+              <Dropdown
+                label='Select Sub Category'
+                data={this.state.subCatList}
+                onChangeText={this.onChangeTextSubCategories}
+              />
+            </View>
 
             <Text style={styles.heading}>Delivery Option</Text>
             <View style={styles.selectBox}>
