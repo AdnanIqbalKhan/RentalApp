@@ -13,6 +13,8 @@ import {
 import { Header, Left, Right, Icon, Button, Title, Body } from "native-base";
 import FAIcon from "react-native-vector-icons/FontAwesome";
 import { Dropdown } from "react-native-material-dropdown";
+import ImagePicker from "react-native-image-picker";
+import GetLocation from 'react-native-get-location';
 
 import { mainCategoriesList, subCategoriesList } from '../../backend/data/CategoriesList'
 import {
@@ -20,9 +22,10 @@ import {
   saveDataWithoutDocId,
   uploadImage
 } from "../../backend/firebase/utility";
+import GlobalConst from '../../config/GlobalConst';
+import { _retrieveData } from '../../backend/AsyncFuncs'
 
-import ImagePicker from "react-native-image-picker";
-import GetLocation from 'react-native-get-location';
+
 
 export default class UploadPost extends Component {
   static navigationOptions = {
@@ -75,6 +78,12 @@ export default class UploadPost extends Component {
     this.selectLocation = this.selectLocation.bind(this);
     this.onChangeTextCategories = this.onChangeTextCategories.bind(this);
     this.resetForm(false)
+
+    _retrieveData(GlobalConst.STORAGE_KEYS.userId)
+      .then(a => this.setState({
+        userID: a
+      }))
+      .catch(e => console.log(e))
   }
 
   onChangeTextCategories(value, index, data) {
@@ -146,7 +155,8 @@ export default class UploadPost extends Component {
       location: this.state.location,
       deliveryPickupOption: this.state.deliveryPickupOption,
       category: this.state.selectedCategory,
-      subCategory: this.state.selectedSubCategory
+      subCategory: this.state.selectedSubCategory,
+      userID:userID
     };
 
     saveDataWithoutDocId('posts', postData)

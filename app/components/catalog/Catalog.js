@@ -24,9 +24,11 @@ import * as theme from './theme'
 import Category from './CatalogCategory';
 import {
   connectFirebase,
-  getAllOfCollection
+  getAllOfCollection,
 } from "../../backend/firebase/utility";
-import { mainCategoriesList, subCategoriesList } from '../../backend/data/CategoriesList'
+
+import { mainCategoriesList } from '../../backend/data/CategoriesList';
+
 
 
 const { width, height } = Dimensions.get('window');
