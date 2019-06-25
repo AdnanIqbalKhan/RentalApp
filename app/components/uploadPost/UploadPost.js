@@ -29,14 +29,11 @@ export default class UploadPost extends Component {
     header: null
   };
 
+  state = {
 
-  constructor(props) {
-    super(props);
-    this.selectImage = this.selectImage.bind(this);
-    this.uploadPost = this.uploadPost.bind(this);
-    this.selectLocation = this.selectLocation.bind(this);
-    this.onChangeTextCategories = this.onChangeTextCategories.bind(this)
+  }
 
+  resetForm(c = true) {
     let deliveryOptions = [
       { value: "Pickup" },
       { value: "Delivery" },
@@ -45,7 +42,7 @@ export default class UploadPost extends Component {
       { value: "Exchange Post Delivery and Pickup" }
     ];
 
-    this.state = {
+    let a = {
       imageSource: require("../../assets/upload.png"),
       deliveryPickupOptionData: deliveryOptions,
       deliveryPickupOption: deliveryOptions[0],
@@ -55,7 +52,7 @@ export default class UploadPost extends Component {
       dailyRateText: '',
       weeklyDiscountText: '',
       deliveryFeeText: '',
-      zipCodeText: '',
+      locationText: '',
       taxesText: '',
       location: '',
       deliveryPickupOption: '',
@@ -63,7 +60,21 @@ export default class UploadPost extends Component {
       subCatList: [],
       selectedCategory: { value: mainCategoriesList[0].name, id: mainCategoriesList[0].id },
       selectedSubCategory: { value: subCategoriesList[0].name, id: subCategoriesList[0].id }
-    };
+    }
+
+    if (c)
+      this.setState(a)
+    else
+      this.state = a;
+  }
+
+  constructor(props) {
+    super(props);
+    this.selectImage = this.selectImage.bind(this);
+    this.uploadPost = this.uploadPost.bind(this);
+    this.selectLocation = this.selectLocation.bind(this);
+    this.onChangeTextCategories = this.onChangeTextCategories.bind(this);
+    this.resetForm(false)
   }
 
   onChangeTextCategories(value, index, data) {
@@ -111,9 +122,11 @@ export default class UploadPost extends Component {
             accuracy: location.accuracy,
             latitude: location.latitude,
             longitude: location.longitude
-          }
+          },
+          locationText: 'lat=' + location.latitude + ", lon=" + location.longitude,
         }
         )
+
       })
       .catch(error => {
         const { code, message } = error;
@@ -129,7 +142,6 @@ export default class UploadPost extends Component {
       dailyRate: this.state.dailyRateText,
       weeklyDiscount: this.state.weeklyDiscountText,
       deliveryFee: this.state.deliveryFeeText,
-      zipCode: this.state.zipCodeText,
       taxes: this.state.taxesText,
       location: this.state.location,
       deliveryPickupOption: this.state.deliveryPickupOption,
@@ -142,7 +154,7 @@ export default class UploadPost extends Component {
         let name = docRef.id + ".jpg";
         let path = 'posts/' + name;
         uploadImage(this.state.imageSource.uri, 'image/jpeg', path, name, 'posts', docRef, false)
-
+        this.resetForm()
       })
       .catch(error => {
         const { code, message } = error;
@@ -228,6 +240,7 @@ export default class UploadPost extends Component {
             <TextInput
               placeholder="The Price Per Day"
               keyboardAppearance="default"
+              keyboardType="number-pad"
               autoCapitalize="none"
               returnKeyType="next"
               style={styles.textbox1}
@@ -235,10 +248,11 @@ export default class UploadPost extends Component {
               autoCorrect={false}
             />
 
-            <Text style={styles.heading}>Discount For weekly Rental</Text>
+            <Text style={styles.heading}>Discount For weekly Rental (percentage)</Text>
             <TextInput
               placeholder="Enter Percentage as whole Number 10 for 10%"
               keyboardAppearance="default"
+              keyboardType="number-pad"
               autoCapitalize="none"
               returnKeyType="next"
               style={styles.textbox1}
@@ -285,6 +299,7 @@ export default class UploadPost extends Component {
             <TextInput
               placeholder="The Price for delivery"
               keyboardAppearance="default"
+              keyboardType="number-pad"
               autoCapitalize="none"
               returnKeyType="next"
               style={styles.textbox1}
@@ -297,18 +312,13 @@ export default class UploadPost extends Component {
             <Text style={styles.heading}>Item Location</Text>
             <View style={{ flexDirection: "row" }}>
               <View>
-                <TextInput
-                  placeholder="Zip Code"
-                  keyboardAppearance="default"
-                  autoCapitalize="none"
-                  returnKeyType="next"
-                  style={styles.textboxLoc}
-                  onChangeText={zipCodeText => this.setState({ zipCodeText })}
-                  autoCorrect={false}
-                />
+                <Text style={styles.textboxLoc}>{this.state.locationText}</Text>
               </View>
               <View>
-                <TouchableOpacity style={styles.btnLoc} onPress={this.selectLocation}>
+                <TouchableOpacity
+                  style={styles.btnLoc}
+                  onPress={this.selectLocation}
+                >
                   <Text style={styles.textcolor}>Get My Location</Text>
                 </TouchableOpacity>
               </View>
@@ -318,6 +328,7 @@ export default class UploadPost extends Component {
             <TextInput
               placeholder="Taxes"
               keyboardAppearance="default"
+              keyboardType="number-pad"
               autoCapitalize="none"
               returnKeyType="next"
               style={styles.textbox1}

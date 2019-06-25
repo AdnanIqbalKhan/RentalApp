@@ -26,6 +26,7 @@ import {
   connectFirebase,
   getAllOfCollection
 } from "../../backend/firebase/utility";
+import { mainCategoriesList, subCategoriesList } from '../../backend/data/CategoriesList'
 
 
 const { width, height } = Dimensions.get('window');
@@ -238,6 +239,17 @@ const styles = StyleSheet.create({
     marginLeft: '25%',
     borderTopLeftRadius: 15,
     borderBottomLeftRadius: 15
+  },
+  categoryClose: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 20,
+    height: 20,
+    backgroundColor: '#fff',
+    borderRadius: 50,
+    zIndex: 10,
   }
 });
 
@@ -248,7 +260,9 @@ class Catalog extends Component {
 
     this.state = {
       search: '',
-      catalogData: []
+      catalogData: [],
+      catalogDataBackup: [],
+      showCloseCategoryBtn: false
     };
     console.log('hello')
     connectFirebase();
@@ -256,7 +270,8 @@ class Catalog extends Component {
       .then(r => {
         console.log(r)
         this.setState({
-          catalogData: r
+          catalogData: r,
+          catalogDataBackup: r
         })
       })
       .catch(error => {
@@ -278,19 +293,22 @@ class Catalog extends Component {
     header: null
   }
 
+  selectCategory(id) {
+    console.log(id)
+    // console.log(this.state.catalogDataBackup)
+    // console.log(this.state.catalogData)
+    let a = this.state.catalogDataBackup.filter((item, i) => {
+      return item.category.id == id;
+    })
+    this.setState({
+      catalogData: a,
+      showCloseCategoryBtn: true
+    })
+    console.log(a)
+  }
+
   render() {
-    const items = [
-      { name: 'TURQUOISE', code: '$200' }, { name: 'EMERALD', code: '$60' },
-      { name: 'PETER RIVER', code: '$600' }, { name: 'AMETHYST', code: '$20' },
-      { name: 'WET ASPHALT', code: '#34495e' }, { name: 'GREEN SEA', code: '#16a085' },
-      { name: 'NEPHRITIS', code: '#27ae60' }, { name: 'BELIZE HOLE', code: '#2980b9' },
-      { name: 'WISTERIA', code: '#8e44ad' }, { name: 'MIDNIGHT BLUE', code: '#2c3e50' },
-      { name: 'SUN FLOWER', code: '#f1c40f' }, { name: 'CARROT', code: '#e67e22' },
-      { name: 'ALIZARIN', code: '#e74c3c' }, { name: 'CLOUDS', code: '#ecf0f1' },
-      { name: 'CONCRETE', code: '#95a5a6' }, { name: 'ORANGE', code: '#f39c12' },
-      { name: 'PUMPKIN', code: '#d35400' }, { name: 'POMEGRANATE', code: '#c0392b' },
-      { name: 'SILVER', code: '#bdc3c7' }, { name: 'ASBESTOS', code: '#7f8c8d' },
-    ];
+
     const { search } = this.state;
     return (
       <View style={styles.container}>
@@ -334,24 +352,31 @@ class Catalog extends Component {
           </View>
         </View>
         <View style={{ marginTop: 7 }}>
+          {this.state.showCloseCategoryBtn &&
+            <TouchableOpacity
+              style={styles.categoryClose}
+              onPress={() => this.setState({
+                catalogData: this.state.catalogDataBackup,
+                showCloseCategoryBtn: false
+              })}
+            >
+              <Icon name="close" color="#f50" size={10} />
+            </TouchableOpacity>
+          }
+
+
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}>
-            <Category imageUri={require('../../assets/shopping.png')}
-              name="Electronic"
-            />
-            <Category imageUri={require('../../assets/event.png')}
-              name="Event"
-            />
-            <Category imageUri={require('../../assets/truck.png')}
-              name="Industrial"
-            />
-            <Category imageUri={require('../../assets/industrial.png')}
-              name="Recreation"
-            />
-            <Category imageUri={require('../../assets/shopping.png')}
-              name="Eatery"
-            />
+
+            {
+              mainCategoriesList.map((item, key) => {
+                return (<TouchableOpacity key={item.id} onPress={() => this.selectCategory(item.id)}>
+                  <Category imageUri={require('../../assets/industrial.png')}
+                    name={item.name}
+                  />
+                </TouchableOpacity>);
+              })}
           </ScrollView>
         </View>
 
