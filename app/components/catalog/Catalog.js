@@ -264,7 +264,9 @@ class Catalog extends Component {
       catalogDataBackup: [],
       showCloseCategoryBtn: false
     };
-    console.log('hello')
+    this.searchText = this.searchText.bind(this)
+    this.selectCategory = this.selectCategory.bind(this)
+
     connectFirebase();
     getAllOfCollection('posts')
       .then(r => {
@@ -280,13 +282,6 @@ class Catalog extends Component {
       })
   }
 
-  state = {
-    search: '',
-  };
-
-  updateSearch = search => {
-    this.setState({ search });
-  };
   scrollX = new Animated.Value(0);
 
   static navigationOptions = {
@@ -294,9 +289,6 @@ class Catalog extends Component {
   }
 
   selectCategory(id) {
-    console.log(id)
-    // console.log(this.state.catalogDataBackup)
-    // console.log(this.state.catalogData)
     let a = this.state.catalogDataBackup.filter((item, i) => {
       return item.category.id == id;
     })
@@ -304,7 +296,25 @@ class Catalog extends Component {
       catalogData: a,
       showCloseCategoryBtn: true
     })
-    console.log(a)
+  }
+
+  searchText(txt) {
+    console.log(txt)
+    if (txt == '') {
+      this.setState({
+        catalogData: this.state.catalogDataBackup
+      })
+    } else {
+      let a = this.state.catalogDataBackup.filter((item, i) => {
+        return item.title.toLowerCase().includes(txt.toLowerCase());
+      })
+      console.log(a)
+      this.setState({
+        catalogData: a
+      })
+    }
+
+    console.log(this.state.catalogData)
   }
 
   render() {
@@ -341,8 +351,8 @@ class Catalog extends Component {
             <View style={{ width: '90%' }}>
               <TextInput placeholder='Search' keyboardAppearance='default' autoCapitalize='none'
                 returnKeyType='next' style={styles.textbox1} autoCorrect={false}
+                onChangeText={searchText => this.searchText(searchText)}
               />
-
             </View>
             <View style={{ alignSelf: 'center' }}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Filter')}>
@@ -363,12 +373,9 @@ class Catalog extends Component {
               <Icon name="close" color="#f50" size={10} />
             </TouchableOpacity>
           }
-
-
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}>
-
             {
               mainCategoriesList.map((item, key) => {
                 return (<TouchableOpacity key={item.id} onPress={() => this.selectCategory(item.id)}>
