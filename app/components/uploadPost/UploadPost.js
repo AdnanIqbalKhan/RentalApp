@@ -153,10 +153,10 @@ export default class UploadPost extends Component {
       deliveryFee: this.state.deliveryFeeText,
       taxes: this.state.taxesText,
       location: this.state.location,
-      deliveryPickupOption: this.state.deliveryPickupOption,
+      deliveryPickupOption: this.state.deliveryPickupOption.value,
       category: this.state.selectedCategory,
       subCategory: this.state.selectedSubCategory,
-      userID:userID
+      userID: userID
     };
 
     saveDataWithoutDocId('posts', postData)
@@ -164,6 +164,8 @@ export default class UploadPost extends Component {
         let name = docRef.id + ".jpg";
         let path = 'posts/' + name;
         uploadImage(this.state.imageSource.uri, 'image/jpeg', path, name, 'posts', docRef, false)
+        updateData('posts', docRef.id, { id: docRef.id })
+
         this.resetForm()
       })
       .catch(error => {
