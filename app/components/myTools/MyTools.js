@@ -101,7 +101,6 @@ export default class MyTools extends Component {
                         :
                         item.rating.star
                     }
-
                     {item.rating.star != -1 && <Ionicons name={'ios-star'} size={16} color={'#ffcc00'} />}
                   </Text>
                   <View style={{ flexDirection: 'row' }}>

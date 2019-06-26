@@ -19,6 +19,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { Header, Left, Right, Icon, Button, Title, Body } from 'native-base';
 import { FlatGrid } from 'react-native-super-grid';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import * as theme from './theme'
 
@@ -292,6 +293,19 @@ class Catalog extends Component {
     header: null
   }
 
+  renderSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: '100%',
+          backgroundColor: 'grey',
+          marginBottom: 2
+        }}
+      />
+    );
+  };
+  
   selectCategory(id) {
     let a = this.state.catalogDataBackup.filter((item, i) => {
       return item.category.id == id;
@@ -319,8 +333,8 @@ class Catalog extends Component {
   }
 
   render() {
-
-    const { search } = this.state;
+    var displayType = this.props.navigation.getParam('displayType', 'grid')
+    console.log(displayType)
     return (
       <View style={styles.container}>
         <View>
@@ -392,25 +406,63 @@ class Catalog extends Component {
           : <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: theme.sizes.padding }}>
             <View style={{ flex: 1, backgroundColor: 'white', paddingTop: 5 }}>
-              <FlatGrid
-                itemDimension={100}
-                items={this.state.catalogData}
-                style={styles.gridView}
-                // staticDimension={300}
-                // fixed
-                // spacing={20}
-                renderItem={({ item, index }) => (
-                  <TouchableHighlight onPress={() => this.props.navigation.navigate('DetailTabs', { id: item.id, item: item })}>
-                    <View style={[styles.itemContainer]}>
-                      <ImageBackground source={{ uri: item.imageUrl }} style={{ height: '100%' }} resizeMode='contain'>
-                        <View style={styles.priceTag}>
-                          <Text style={styles.itemCode}>${item.dailyRate}</Text>
+              {displayType == 'grid' ?
+                <FlatGrid
+                  itemDimension={100}
+                  items={this.state.catalogData}
+                  style={styles.gridView}
+                  renderItem={({ item, index }) => (
+                    <TouchableHighlight onPress={() => this.props.navigation.navigate('DetailTabs', { id: item.id, item: item })}>
+                      <View style={[styles.itemContainer]}>
+                        <ImageBackground source={{ uri: item.imageUrl }} style={{ height: '100%' }} resizeMode='contain'>
+                          <View style={styles.priceTag}>
+                            <Text style={styles.itemCode}>${item.dailyRate}</Text>
+                          </View>
+                        </ImageBackground>
+                      </View>
+                    </TouchableHighlight>
+                  )}
+                />
+                :
+                <FlatList
+                  style={styles.gridView}
+                  data={this.state.catalogData}
+                  renderItem={({ item }) => (
+                    <View style={{ flexDirection: 'row', height: 105, backgroundColor: 'white' }}>
+                      <View>
+                        <Image source={{ uri: item.imageUrl }} style={{ width: 100, height: 100 }} />
+                      </View>
+                      <View style={{ marginLeft: 8 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                          <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 2 }}>{item.title}</Text>
                         </View>
-                      </ImageBackground>
+                        <Text style={styles.avatarRating}>
+                          {
+                            (item.rating.star == -1) ?
+                              "No Reviews"
+                              :
+                              item.rating.star
+                          }
+                          {item.rating.star != -1 && <Ionicons name={'ios-star'} size={16} color={'#ffcc00'} />}
+                        </Text>
+                        <View style={{ flexDirection: 'row' }}>
+                          <Text style={{ fontSize: 18 }}>Deposit: $40</Text>
+                          <Text style={{ fontSize: 18, marginLeft: '5%' }}>Delivery:
+                            {item.deliveryPickupOption != "Pickup"
+                              ? "$" + item.deliveryFee
+                              : "Not Available"
+                            }
+                          </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                          <Text style={{ fontSize: 16, color: '#1b96fe' }}>Status: {item.status}</Text>
+                        </View>
+                      </View>
                     </View>
-                  </TouchableHighlight>
-                )}
-              />
+                  )}
+                  ItemSeparatorComponent={this.renderSeparator}
+                />
+              }
             </View>
           </ScrollView>
         }

@@ -5,6 +5,7 @@ import { Dropdown } from 'react-native-material-dropdown';
 import { mainCategoriesList, subCategoriesList } from '../../backend/data/CategoriesList'
 
 
+
 export default class Filter extends Component {
 
   constructor() {
@@ -36,10 +37,13 @@ export default class Filter extends Component {
       selectedSubCategoty: null,
 
       sortOptions: sOptions,
-      selectedSort: sOptions[0].value,
+      selectedSort: null,
 
       maxDistanceOptions: distanceOptions,
-      selectedMaxDistance: distanceOptions[0].value
+      selectedMaxDistance: null,
+
+      selectedDisplay: 'grid',
+      gridDisplayBtn: true
     }
 
     this.onChangeTextCategories = this.onChangeTextCategories.bind(this)
@@ -64,21 +68,20 @@ export default class Filter extends Component {
 
 
   onPress() {
-    console.log(this.state.selectedCategoty)
-    console.log(this.state.selectedSubCategoty)
+    // console.log(this.state.selectedCategoty)
+    // console.log(this.state.selectedSubCategoty)
+
+    // console.log(this.state)
+
+    this.props.navigation.navigate('Catalog', {
+      displayType: this.state.selectedDisplay
+    })
   }
 
   render() {
-
+    console.log(this.state.selectedDisplay)
     let categoriesList = mainCategoriesList.map(n => { return { value: n.name, id: n.id } });
-
-    let data = [{
-      value: 'Option 1',
-    }, {
-      value: 'Option 2',
-    }, {
-      value: 'Option 3',
-    }];
+    var disabled = this.state.gridDisplayBtn;
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -97,12 +100,28 @@ export default class Filter extends Component {
             <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: '500', marginTop: 5 }}>Display</Text>
             <View style={{ flexDirection: 'row', marginTop: 8, marginBottom: 5, alignSelf: 'center' }}>
               <View>
-                <TouchableOpacity style={styles.btn}>
+                <TouchableOpacity
+                  style={disabled ? styles.disabled : styles.btn}
+                  disabled={disabled}
+                  onPress={() => {
+                    this.setState({
+                      gridDisplayBtn: !disabled,
+                      selectedDisplay: 'grid'
+                    })
+                  }}>
                   <Text style={styles.textcolor}>Grid View</Text>
                 </TouchableOpacity>
               </View>
               <View style={{ marginLeft: 10 }}>
-                <TouchableOpacity style={styles.btn}>
+                <TouchableOpacity
+                  style={!disabled ? styles.disabled : styles.btn}
+                  disabled={!disabled}
+                  onPress={() => {
+                    this.setState({
+                      gridDisplayBtn: !disabled,
+                      selectedDisplay: 'list'
+                    })
+                  }} >
                   <Text style={styles.textcolor}>List View</Text>
                 </TouchableOpacity>
               </View>
@@ -179,6 +198,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
     backgroundColor: '#1b96fe',
+    justifyContent: 'center',
+    marginTop: 10,
+    width: 130,
+    height: 30,
+    borderRadius: 5
+
+  },
+  disabled: {
+    alignSelf: 'center',
+    alignItems: 'center',
+
+    backgroundColor: '#62a582',
     justifyContent: 'center',
     marginTop: 10,
     width: 130,
