@@ -272,7 +272,6 @@ class Catalog extends Component {
     connectFirebase();
     getAllOfCollection('posts')
       .then(r => {
-        console.log(r)
         this.setState({
           catalogData: r,
           catalogDataBackup: r
@@ -301,7 +300,6 @@ class Catalog extends Component {
   }
 
   searchText(txt) {
-    console.log(txt)
     if (txt == '') {
       this.setState({
         catalogData: this.state.catalogDataBackup
@@ -310,13 +308,11 @@ class Catalog extends Component {
       let a = this.state.catalogDataBackup.filter((item, i) => {
         return item.title.toLowerCase().includes(txt.toLowerCase());
       })
-      console.log(a)
       this.setState({
         catalogData: a
       })
     }
 
-    console.log(this.state.catalogData)
   }
 
   render() {
@@ -389,30 +385,33 @@ class Catalog extends Component {
           </ScrollView>
         </View>
 
-        <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: theme.sizes.padding }}>
-          <View style={{ flex: 1, backgroundColor: 'white', paddingTop: 5 }}>
-            <FlatGrid
-              itemDimension={100}
-              items={this.state.catalogData}
-              style={styles.gridView}
-              // staticDimension={300}
-              // fixed
-              // spacing={20}
-              renderItem={({ item, index }) => (
-                <TouchableHighlight onPress={() => this.props.navigation.navigate('DetailTabs')}>
-                  <View style={[styles.itemContainer]}>
-                    <ImageBackground source={{ uri: item.imageUrl }} style={{ height: '100%' }} resizeMode='contain'>
-                      <View style={styles.priceTag}>
-                        <Text style={styles.itemCode}>{item.dailyRate}</Text>
-                      </View>
-                    </ImageBackground>
-                  </View>
-                </TouchableHighlight>
-              )}
-            />
-          </View>
-        </ScrollView>
+        {this.state.catalogData
+          ? <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: theme.sizes.padding }}>
+            <View style={{ flex: 1, backgroundColor: 'white', paddingTop: 5 }}>
+              <FlatGrid
+                itemDimension={100}
+                items={this.state.catalogData}
+                style={styles.gridView}
+                // staticDimension={300}
+                // fixed
+                // spacing={20}
+                renderItem={({ item, index }) => (
+                  <TouchableHighlight onPress={() => this.props.navigation.navigate('DetailTabs', { id: item.id, item: item })}>
+                    <View style={[styles.itemContainer]}>
+                      <ImageBackground source={{ uri: item.imageUrl }} style={{ height: '100%' }} resizeMode='contain'>
+                        <View style={styles.priceTag}>
+                          <Text style={styles.itemCode}>{item.dailyRate}</Text>
+                        </View>
+                      </ImageBackground>
+                    </View>
+                  </TouchableHighlight>
+                )}
+              />
+            </View>
+          </ScrollView>
+          : <Text>Loading Data...</Text>
+        }
       </View>
     );
   }
