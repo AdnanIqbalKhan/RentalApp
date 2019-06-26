@@ -1,10 +1,11 @@
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, ScrollView, Image, TouchableHighlight, Switch, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, Text, View, ScrollView, Image, TouchableHighlight, Switch, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Calendar } from 'react-native-calendars';
 import Geocoder from 'react-native-geocoder';
+import StarRating from 'react-native-star-rating';
 
 import {
   connectFirebase,
@@ -58,6 +59,7 @@ export default class ItemDetails extends Component {
 
   render() {
     var item = this.state.itemData;
+    var user = this.state.itemUser;
     return (
       <View style={styles.container}>
         {item ?
@@ -129,21 +131,36 @@ export default class ItemDetails extends Component {
             </View>
 
             <View style={styles.boxDetails}>
-              {this.state.itemUser ?
+              {user ?
                 <TouchableHighlight onPress={() => this.props.navigation.navigate('SellerProfile', {
-                  id: this.state.itemUser.UserId
+                  id: user.UserId
                 })}>
                   <View style={{ flexDirection: 'row', marginLeft: 20 }}>
                     <View style={{ marginLeft: 6 }}>
                       <Image source={require('../../assets/avatar.png')} style={{ width: 60, height: 60, borderRadius: 60 }} />
                     </View>
-                    <View>
-                      <Text style={{ marginLeft: 15, color: 'black', fontSize: 16 }}>{this.state.itemUser.firstName}</Text>
+                    <View style={{ marginLeft: 15 }}>
+                      <Text style={{ color: 'black', fontSize: 16 }}>{user.firstName}</Text>
 
                       <View style={{ flexDirection: 'row' }}>
-                        <Text style={styles.avatarRating}>4.5<Ionicons name={'ios-star'} size={12}
-                          color={'#000'} /></Text>
-                        <Text>(1)</Text>
+                        {(user.rating.star == -1) ?
+                          <Text style={styles.avatarRating}>
+                            {"No review"}
+                          </Text>
+                          :
+                          <StarRating
+                            disabled={true}
+                            emptyStar={'ios-star-outline'}
+                            fullStar={'ios-star'}
+                            halfStar={'ios-star-half'}
+                            iconSet={'Ionicons'}
+                            maxStars={5}
+                            rating={user.rating.star}
+                            starSize={20}
+                            fullStarColor={'#1b96fe'}
+                          />
+                        }
+                        <Text>{(user.rating.star == -1) ? "" : "(" + user.rating.count + ")"}</Text>
                       </View>
 
                     </View>
@@ -329,7 +346,7 @@ export default class ItemDetails extends Component {
             </View>
           </ScrollView>
           :
-          <Text>{"Loading Data..."}</Text>
+          <ActivityIndicator size="large" />
         }
 
       </View>

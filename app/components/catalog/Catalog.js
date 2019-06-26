@@ -11,7 +11,8 @@ import {
   Dimensions,
   TouchableOpacity,
   TouchableHighlight,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -264,7 +265,8 @@ class Catalog extends Component {
       search: '',
       catalogData: [],
       catalogDataBackup: [],
-      showCloseCategoryBtn: false
+      showCloseCategoryBtn: false,
+      loading: true
     };
     this.searchText = this.searchText.bind(this)
     this.selectCategory = this.selectCategory.bind(this)
@@ -274,7 +276,8 @@ class Catalog extends Component {
       .then(r => {
         this.setState({
           catalogData: r,
-          catalogDataBackup: r
+          catalogDataBackup: r,
+          loading: false
         })
       })
       .catch(error => {
@@ -344,7 +347,6 @@ class Catalog extends Component {
               </Button>
             </Right>
           </Header>
-
           <View style={{ flexDirection: 'row', backgroundColor: '#1b96fe' }}>
             <View style={{ width: '90%' }}>
               <TextInput placeholder='Search' keyboardAppearance='default' autoCapitalize='none'
@@ -385,8 +387,9 @@ class Catalog extends Component {
           </ScrollView>
         </View>
 
-        {this.state.catalogData
-          ? <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false}
+        {this.state.loading
+          ? <ActivityIndicator size="large" />
+          : <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: theme.sizes.padding }}>
             <View style={{ flex: 1, backgroundColor: 'white', paddingTop: 5 }}>
               <FlatGrid
@@ -401,7 +404,7 @@ class Catalog extends Component {
                     <View style={[styles.itemContainer]}>
                       <ImageBackground source={{ uri: item.imageUrl }} style={{ height: '100%' }} resizeMode='contain'>
                         <View style={styles.priceTag}>
-                          <Text style={styles.itemCode}>{item.dailyRate}</Text>
+                          <Text style={styles.itemCode}>${item.dailyRate}</Text>
                         </View>
                       </ImageBackground>
                     </View>
@@ -410,7 +413,6 @@ class Catalog extends Component {
               />
             </View>
           </ScrollView>
-          : <Text>Loading Data...</Text>
         }
       </View>
     );

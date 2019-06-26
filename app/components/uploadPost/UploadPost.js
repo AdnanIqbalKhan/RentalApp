@@ -156,7 +156,11 @@ export default class UploadPost extends Component {
       deliveryPickupOption: this.state.deliveryPickupOption.value,
       category: this.state.selectedCategory,
       subCategory: this.state.selectedSubCategory,
-      userID: userID
+      userID: userID,
+      rating: {
+        star: -1,
+        count: 0
+      }
     };
 
     saveDataWithoutDocId('posts', postData)

@@ -90,9 +90,6 @@ const ItemDetailStack = createStackNavigator({
   DetailTabs: ItemDetailTabNavigator,
   SellerProfile: SellerProfile,
   RequestRental: RequestRental,
-
-
-
 }
 );
 
@@ -157,28 +154,20 @@ const CustomDrawerComponent = (props) => (
   <SafeAreaView style={{ flex: 1 }}>
     <View style={{ height: 150, backgroundColor: '#2a84c5' }}>
       <ImageBackground style={styles.container} source={require('../assets/drawerCov.png')}>
-
-
         <Image source={require('../assets/avatar.png')} style={styles.avatar} />
         <Text style={styles.avatarName}>John</Text>
         <Text style={styles.avatarRating}>4.5<Ionicons name={'ios-star'} size={12}
           color={'#ffffff'} /></Text>
       </ImageBackground>
     </View>
-
-
     <ScrollView>
       <DrawerItems {...props} />
     </ScrollView>
     <View>
-
-
     </View>
   </SafeAreaView>
 
 )
-
-
 
 const AppDrawerNavigator = createDrawerNavigator({
   //DownNav:DownNav,
@@ -207,8 +196,6 @@ const AppDrawerNavigator = createDrawerNavigator({
 
   })
 
-
-
 export default createAppContainer(createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
@@ -224,9 +211,6 @@ export default createAppContainer(createSwitchNavigator(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-
-
   },
 
   avatar: {
@@ -254,12 +238,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     marginTop: '1%'
   },
-
-
-
-
-
-
-
-
 });
