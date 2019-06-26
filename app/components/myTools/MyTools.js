@@ -4,6 +4,14 @@ import { ListItem, SearchBar } from 'react-native-elements';
 import { Header, Left, Right, Icon, Button, Title, Body } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import {
+  connectFirebase,
+  getDocByObjectKey
+} from "../../backend/firebase/utility";
+import GlobalConst from '../../config/GlobalConst';
+import { _retrieveData } from '../../backend/AsyncFuncs'
+
+
 export default class MyTools extends Component {
   static navigationOptions = {
     title: 'My Tools',
@@ -18,32 +26,20 @@ export default class MyTools extends Component {
     };
 
     this.arrayholder = [];
-  }
 
-  componentDidMount() {
-    this.makeRemoteRequest();
-  }
 
-  makeRemoteRequest = () => {
-    const url = `https://randomuser.me/api/?&results=20`;
-    this.setState({ loading: true });
-
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: res.results,
-          error: res.error || null,
-          loading: false,
-        });
-        this.arrayholder = res.results;
+    connectFirebase()
+    _retrieveData(GlobalConst.STORAGE_KEYS.userId)
+      .then(a => {
+        getDocByObjectKey('posts', 'userID', a)
+          .then(a => {
+            this.setState({ data: a })
+          }).catch(e => console.log(e))
       })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
-  };
+      .catch(e => console.log(e))
 
 
+  }
 
   renderSeparator = () => {
     return (
@@ -53,7 +49,6 @@ export default class MyTools extends Component {
           width: '100%',
           backgroundColor: 'grey',
           marginBottom: 2
-
         }}
       />
     );
@@ -93,21 +88,33 @@ export default class MyTools extends Component {
             renderItem={({ item }) => (
               <View style={{ flexDirection: 'row', height: 105, backgroundColor: 'white' }}>
                 <View>
-                  <Image source={require('../../assets/Gen.jpg')} style={{ width: 100, height: 100 }} />
+                  <Image source={{ uri: item.imageUrl }} style={{ width: 100, height: 100 }} />
                 </View>
                 <View style={{ marginLeft: 8 }}>
                   <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 2 }}>Item Name</Text>
-
+                    <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 2 }}>{item.title}</Text>
                   </View>
-                  <Text style={styles.avatarRating}>4.5<Ionicons name={'ios-star'} size={16}
-                    color={'#ffcc00'} /></Text>
+                  <Text style={styles.avatarRating}>
+                    {
+                      (item.rating.star == -1) ?
+                        "No Reviews"
+                        :
+                        item.rating.star
+                    }
+
+                    {item.rating.star != -1 && <Ionicons name={'ios-star'} size={16} color={'#ffcc00'} />}
+                  </Text>
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={{ fontSize: 18 }}>Deposit: $40</Text>
-                    <Text style={{ fontSize: 18, marginLeft: '5%' }}>Delivery: $15</Text>
+                    <Text style={{ fontSize: 18, marginLeft: '5%' }}>Delivery:
+                    {item.deliveryPickupOption != "Pickup"
+                        ? "$" + item.deliveryFee
+                        : "Not Available"
+                      }
+                    </Text>
                   </View>
                   <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                    <Text style={{ fontSize: 16, color: '#1b96fe' }}>Status: On Rent</Text>
+                    <Text style={{ fontSize: 16, color: '#1b96fe' }}>Status: {item.status}</Text>
                   </View>
                 </View>
               </View>

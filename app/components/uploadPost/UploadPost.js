@@ -20,7 +20,8 @@ import { mainCategoriesList, subCategoriesList } from '../../backend/data/Catego
 import {
   connectFirebase,
   saveDataWithoutDocId,
-  uploadImage
+  uploadImage,
+  updateData
 } from "../../backend/firebase/utility";
 import GlobalConst from '../../config/GlobalConst';
 import { _retrieveData } from '../../backend/AsyncFuncs'
@@ -156,11 +157,12 @@ export default class UploadPost extends Component {
       deliveryPickupOption: this.state.deliveryPickupOption.value,
       category: this.state.selectedCategory,
       subCategory: this.state.selectedSubCategory,
-      userID: userID,
+      userID: this.state.userID,
       rating: {
         star: -1,
         count: 0
-      }
+      },
+      status: 'Available'
     };
 
     saveDataWithoutDocId('posts', postData)

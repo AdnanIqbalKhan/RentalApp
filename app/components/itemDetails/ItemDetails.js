@@ -5,7 +5,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Calendar } from 'react-native-calendars';
 import Geocoder from 'react-native-geocoder';
-import StarRating from 'react-native-star-rating';
 
 import {
   connectFirebase,
@@ -143,23 +142,16 @@ export default class ItemDetails extends Component {
                       <Text style={{ color: 'black', fontSize: 16 }}>{user.firstName}</Text>
 
                       <View style={{ flexDirection: 'row' }}>
-                        {(user.rating.star == -1) ?
-                          <Text style={styles.avatarRating}>
-                            {"No review"}
-                          </Text>
-                          :
-                          <StarRating
-                            disabled={true}
-                            emptyStar={'ios-star-outline'}
-                            fullStar={'ios-star'}
-                            halfStar={'ios-star-half'}
-                            iconSet={'Ionicons'}
-                            maxStars={5}
-                            rating={user.rating.star}
-                            starSize={20}
-                            fullStarColor={'#1b96fe'}
-                          />
-                        }
+                        <Text style={styles.avatarRating}>
+                          {
+                            (item.rating.star == -1) ?
+                              "No Reviews"
+                              :
+                              item.rating.star
+                          }
+
+                          {item.rating.star != -1 && <Ionicons name={'ios-star'} size={16} color={'#ffcc00'} />}
+                        </Text>
                         <Text>{(user.rating.star == -1) ? "" : "(" + user.rating.count + ")"}</Text>
                       </View>
 
