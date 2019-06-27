@@ -1,7 +1,8 @@
-
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Dropdown } from 'react-native-material-dropdown';
+import GetLocation from 'react-native-get-location';
+import { getDistance, convertDistance } from 'geolib';
 import { mainCategoriesList, subCategoriesList } from '../../backend/data/CategoriesList'
 
 
@@ -33,8 +34,8 @@ export default class Filter extends Component {
 
     this.state = {
       subCatList: [],
-      selectedCategoty: null,
-      selectedSubCategoty: null,
+      selectedCategory: null,
+      selectedSubCategory: null,
 
       sortOptions: sOptions,
       selectedSort: null,
@@ -43,7 +44,12 @@ export default class Filter extends Component {
       selectedMaxDistance: null,
 
       selectedDisplay: 'grid',
-      gridDisplayBtn: true
+      gridDisplayBtn: true,
+
+      maxPricePerDay: null,
+      maxSecurityDeposit: null,
+      maxDepositRefundable: null,
+      maxDeliveryFee: null
     }
 
     this.onChangeTextCategories = this.onChangeTextCategories.bind(this)
@@ -62,24 +68,126 @@ export default class Filter extends Component {
 
     this.setState({
       subCatList: subCat,
-      selectedCategoty: data[index]
+      selectedCategory: data[index]
     })
+  }
+
+  applyFilters(filter, d) {
+    console.log(filter)
+    let data = d;
+    if (filter.category != null) {
+      data = data.filter((item, i) => {
+        return item.category.id == filter.category.id;
+      })
+    }
+    if (filter.subCategory != null) {
+      data = data.filter((item, i) => {
+        return item.subCategory.id == filter.subCategory.id;
+      })
+    }
+    if (filter.maxDistance != null) {
+      GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 15000,
+      })
+        .then(location => {
+          data = data.filter((item, i) => {
+            return parseFloat(convertDistance(getDistance({
+              latitude: location.latitude,
+              longitude: location.longitude
+            }, {
+                latitude: item.location.latitude,
+                longitude: item.location.longitude
+              }), 'mi')) <= parseFloat(filter.maxDistance);
+          })
+        })
+        .catch(error => {
+          const { code, message } = error;
+          console.warn(code, message);
+        })
+
+
+    }
+    if (filter.maxPricePerDay != null) {
+      data = data.filter((item, i) => {
+        return parseFloat(item.dailyRate) <= parseFloat(filter.maxPricePerDay);
+      })
+    }
+    if (filter.maxSecurityDeposit != null) {
+      // data = data.filter((item, i) => {
+      //   return item TODO <= filter.maxSecurityDeposit;
+      // })
+    }
+    if (filter.maxDepositRefundable != null) {
+      // data = data.filter((item, i) => {
+      //   return item TODO <= filter.maxDepositRefundable;
+      // })
+    }
+    if (filter.maxDeliveryFee != null) {
+      data = data.filter((item, i) => {
+        return parseFloat(item.deliveryFee) <= parseFloat(filter.maxDeliveryFee);
+      })
+    }
+    if (filter.sort != null) {
+      switch (filter.sort) {
+        case "Category":
+          data = data.sort((a, b) => {
+            console.log("Sort Category=>", a.category.id, b.category.id, parseInt(a.category.id) - parseInt(b.category.id))
+            return parseInt(a.category.id) - parseInt(b.category.id)
+          })
+          break;
+        case "Rating":
+          data = data.sort((a, b) => parseInt(a.rating.star) - parseInt(b.rating.star))
+          break;
+        case "Price":
+          data = data.sort((a, b) => parseFloat(a.dailyRate) - parseFloat(b.dailyRate))
+          break;
+        case "Delivery":
+
+          data = data.sort((a, b) => {
+            let d1 = a.deliveryFee != "" ? parseFloat(a.deliveryFee) : 0
+            let d2 = b.deliveryFee != "" ? parseFloat(b.deliveryFee) : 0
+            return d1 - d2
+          })
+          break;
+        case "Pickup":
+          // data = data.sort((a, b) => TODO)
+          break;
+        default:
+          break;
+      }
+    }
+    return data
   }
 
 
   onPress() {
-    // console.log(this.state.selectedCategoty)
-    // console.log(this.state.selectedSubCategoty)
+    let data = this.props.navigation.getParam('data', [])
 
-    // console.log(this.state)
+    let filters = {
+      category: this.state.selectedCategory,
+      subCategory: this.state.selectedSubCategory,
+      maxDistance: this.state.selectedMaxDistance,
+      sort: this.state.selectedSort,
+      maxPricePerDay: this.state.maxPricePerDay,
+      maxSecurityDeposit: this.state.maxSecurityDeposit,
+      maxDepositRefundable: this.state.maxDepositRefundable,
+      maxDeliveryFee: this.state.maxDeliveryFee
+    }
+
+    // console.log(data.map(a => a.category.id))
+    console.log(data)
+    let k = this.applyFilters(filters, data)
+    // console.log(k.map(a => a.category.id))
+    console.log(k)
 
     this.props.navigation.navigate('Catalog', {
-      displayType: this.state.selectedDisplay
+      displayType: this.state.selectedDisplay,
+      filteredData: k
     })
   }
 
   render() {
-    console.log(this.state.selectedDisplay)
     let categoriesList = mainCategoriesList.map(n => { return { value: n.name, id: n.id } });
     var disabled = this.state.gridDisplayBtn;
     return (
@@ -128,16 +236,20 @@ export default class Filter extends Component {
             </View>
             <View style={{ marginTop: 10 }}>
               <TextInput placeholder='Max Price Per Day' keyboardAppearance='default' autoCapitalize='none'
-                returnKeyType='next' style={styles.textbox} autoCorrect={false} />
+                returnKeyType='next' style={styles.textbox} autoCorrect={false} keyboardType="number-pad"
+                onChangeText={maxPricePerDay => this.setState({ maxPricePerDay })} />
 
               <TextInput placeholder='Max Security Deposit' keyboardAppearance='default' autoCapitalize='none'
-                returnKeyType='next' style={styles.textbox} autoCorrect={false} />
+                returnKeyType='next' style={styles.textbox} autoCorrect={false} keyboardType="number-pad"
+                onChangeText={maxSecurityDeposit => this.setState({ maxSecurityDeposit })} />
 
               <TextInput placeholder='Max Deposit(Refundable)' keyboardAppearance='default' autoCapitalize='none'
-                returnKeyType='next' style={styles.textbox} autoCorrect={false} />
+                returnKeyType='next' style={styles.textbox} autoCorrect={false} keyboardType="number-pad"
+                onChangeText={maxDepositRefundable => this.setState({ maxDepositRefundable })} />
 
               <TextInput placeholder='Max Delivery Fee' keyboardAppearance='default' autoCapitalize='none'
-                returnKeyType='next' style={styles.textbox} autoCorrect={false} />
+                returnKeyType='next' style={styles.textbox} autoCorrect={false} keyboardType="number-pad"
+                onChangeText={maxDeliveryFee => this.setState({ maxDeliveryFee })} />
 
             </View>
 
@@ -154,7 +266,7 @@ export default class Filter extends Component {
                 data={this.state.subCatList}
                 onChangeText={(value, index, data) => {
                   this.setState({
-                    selectedSubCategoty: data[index]
+                    selectedSubCategory: data[index]
                   })
                 }}
               />

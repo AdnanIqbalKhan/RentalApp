@@ -86,7 +86,7 @@ export default class MyTools extends Component {
           : <FlatList
             data={this.state.data}
             renderItem={({ item }) => (
-              <View style={{ flexDirection: 'row', height: 105, backgroundColor: 'white' }}>
+              <View key={item.id} style={{ flexDirection: 'row', height: 105, backgroundColor: 'white' }}>
                 <View>
                   <Image source={{ uri: item.imageUrl }} style={{ width: 100, height: 100 }} />
                 </View>
