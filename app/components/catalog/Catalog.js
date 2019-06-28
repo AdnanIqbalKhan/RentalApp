@@ -337,11 +337,8 @@ class Catalog extends Component {
 
 
   render() {
-    console.log(this.state.loading)
     var displayType = this.props.navigation.getParam('displayType', 'grid')
-    console.log(displayType)
     let catalogData = this.props.navigation.getParam('filteredData', this.state.catalogData)
-    console.log(catalogData)
     return (
       <View style={styles.container}>
         <View>

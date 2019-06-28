@@ -104,11 +104,10 @@ export default class UploadPost extends Component {
 
   selectImage() {
     ImagePicker.showImagePicker({}, response => {
-      console.log("Response = ", response);
       if (response.didCancel) {
-        console.log("User cancelled image picker");
+        console.warn("User cancelled image picker");
       } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
+        console.warn("ImagePicker Error: ", response.error);
       } else {
         const source = { uri: response.uri };
         // You can also display the image using data:
@@ -126,7 +125,6 @@ export default class UploadPost extends Component {
       timeout: 15000,
     })
       .then(location => {
-        console.log(location);
         this.setState({
           location: {
             accuracy: location.accuracy,

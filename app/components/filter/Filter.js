@@ -73,7 +73,6 @@ export default class Filter extends Component {
   }
 
   applyFilters(filter, d) {
-    console.log(filter)
     let data = d;
     if (filter.category != null) {
       data = data.filter((item, i) => {
@@ -132,7 +131,6 @@ export default class Filter extends Component {
       switch (filter.sort) {
         case "Category":
           data = data.sort((a, b) => {
-            console.log("Sort Category=>", a.category.id, b.category.id, parseInt(a.category.id) - parseInt(b.category.id))
             return parseInt(a.category.id) - parseInt(b.category.id)
           })
           break;
@@ -175,11 +173,7 @@ export default class Filter extends Component {
       maxDeliveryFee: this.state.maxDeliveryFee
     }
 
-    // console.log(data.map(a => a.category.id))
-    console.log(data)
     let k = this.applyFilters(filters, data)
-    // console.log(k.map(a => a.category.id))
-    console.log(k)
 
     this.props.navigation.navigate('Catalog', {
       displayType: this.state.selectedDisplay,

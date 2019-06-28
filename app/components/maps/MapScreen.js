@@ -20,12 +20,9 @@ export default class MapScreen extends Component {
       description: item.description
 
     }
-    console.log(item)
-    console.log(itemId)
   }
 
   render() {
-    console.log(this.state)
     return (
       <View style={styles.container}>
         {
