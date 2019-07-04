@@ -1,16 +1,16 @@
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Header, Left, Right, Icon} from 'native-base';
+import { Header, Left, Right, Icon } from 'native-base';
 import { DrawerActions } from 'react-navigation';
 
-export default class Home extends Component{
+
+export default class Home extends Component {
   static navigationOptions = {
-   
-    drawerIcon: ({tintColor}) =>(
-      <Ionicons name = 'ios-person' color= "#000000" size={31}/>
+    drawerIcon: ({ tintColor }) => (
+      <Ionicons name='ios-person' color="#000000" size={31} />
     )
   }
   render() {
@@ -28,7 +28,7 @@ export default class Home extends Component{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-   
+
   },
   welcome: {
     fontSize: 20,
@@ -40,13 +40,13 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-  menu:{
-    alignItems:'flex-start',
-    justifyContent:'flex-start',
-    marginTop:'5%',
-    marginLeft:'3%',
-    position:'absolute'
-    
-    
-},
+  menu: {
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginTop: '5%',
+    marginLeft: '3%',
+    position: 'absolute'
+
+
+  },
 });

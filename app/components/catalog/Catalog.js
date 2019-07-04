@@ -31,7 +31,7 @@ import {
 } from "../../backend/firebase/utility";
 
 import { mainCategoriesList } from '../../backend/data/CategoriesList';
-
+import { checkPermission, createNotificationListeners } from '../../backend/firebase/fcm'
 
 
 const { width, height } = Dimensions.get('window');
@@ -290,6 +290,26 @@ class Catalog extends Component {
         console.warn(code, message);
       })
   }
+
+  componentDidMount() {
+    _this = this
+    console.log(".........................................")
+    checkPermission().then(() => {
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+      createNotificationListeners().then((notificationListener, notificationOpenedListener, messageListener) => {
+        _this.notificationListener = notificationListener;
+        _this.notificationListener = notificationOpenedListener;
+        _this.notificationListener = messageListener
+        console.log("#############################")
+      }).catch((e) => console.log(e))
+    }).catch((e) => console.log(e))
+  }
+
+  componentWillUnmount() {
+    this.notificationListener;
+    this.notificationOpenedListener;
+  }
+
 
   scrollX = new Animated.Value(0);
 

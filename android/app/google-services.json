@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "855889161975",
+    "firebase_url": "https://rentalapp-69982.firebaseio.com",
+    "project_id": "rentalapp-69982",
+    "storage_bucket": "rentalapp-69982.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855889161975:android:60aaadfeefbe4c71",
+        "android_client_info": {
+          "package_name": "com.rentalapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855889161975-o6drdbo28g8cu7sldphm2sf8n06c75aq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSuuNQNXDqjJBPXrlDYRcLQn-b-U9KWIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855889161975-o6drdbo28g8cu7sldphm2sf8n06c75aq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
