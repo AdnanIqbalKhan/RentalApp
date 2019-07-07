@@ -14,7 +14,8 @@
             },
             "linux": {
                 "command": "cd android && ./gradlew clean"
-            }
+            },
+            "problemMatcher": []
         },
         {
             "label": "Build APK Debug",
@@ -36,7 +37,8 @@
             },
             "linux": {
                 "command": "cd android && ./gradlew assembleRelease"
-            }
+            },
+            "problemMatcher": []
         },
         {
             "label": "Generate Android Bundle",

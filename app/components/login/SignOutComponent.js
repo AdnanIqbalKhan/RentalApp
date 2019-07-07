@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, SafeAreaView, TouchableOpacity} from 'react-native';
 import firebase from 'firebase';
-import firestore from 'firebase/firestore';
 import { withNavigation } from 'react-navigation';
 import GlobalConst from '../../config/GlobalConst';
 import Icon from 'react-native-vector-icons/FontAwesome';

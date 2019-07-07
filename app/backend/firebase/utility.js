@@ -3,14 +3,14 @@ import firestore from 'firebase/firestore';
 import { _storeData } from '../../backend/AsyncFuncs';
 import GlobalConst from '../../config/GlobalConst';
 import RNFetchBlob from 'react-native-fetch-blob';
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 
 
 let currentUserId = '';
 
-export async function connectFirebase() {
-  // Initialize Firebase
-  var config = {
+export async function connectFirebase(){
+ // Initialize Firebase
+ var config = {
     apiKey: "AIzaSyBIozGENFnnh2UEP1ndq4mWa3pODL1l3zk",
     authDomain: "rentalapp-69982.firebaseapp.com",
     databaseURL: "https://rentalapp-69982.firebaseio.com",
@@ -19,15 +19,15 @@ export async function connectFirebase() {
     messagingSenderId: "855889161975",
     appId: "1:855889161975:web:bf1e55f7361c4938"
   };
-  if (!firebase.apps.length) {
-    firebase.initializeApp(config);
-  }
+ if (!firebase.apps.length) {
+   firebase.initializeApp(config);
+ }
 }
 
-export async function getAllOfCollection(collection) {
+export async function getAllOfCollection(collection){
   let data = [];
   let querySnapshot = await firebase.firestore().collection(collection).get();
-  querySnapshot.forEach(function (doc) {
+  querySnapshot.forEach(function(doc) {
     if (doc.exists) {
       data.push(doc.data());
     } else {
@@ -37,109 +37,96 @@ export async function getAllOfCollection(collection) {
   return data;
 }
 
-export async function getData(collection, doc, objectKey) {
+export async function getData(collection, doc, objectKey){
   // check if data exists on the given path
-  if (objectKey === undefined) {
-    return firebase.firestore().collection(collection).doc(doc).get().then(function (doc) {
+  if(objectKey === undefined){
+    return firebase.firestore().collection(collection).doc(doc).get().then(function(doc) {
       if (doc.exists) {
         return doc.data();
-      } else {
+      } else{
         return false;
       }
     })
   }
-  else {
-    return firebase.firestore().collection(collection).doc(doc).get().then(function (doc) {
-      if (doc.exists && (doc.data()[objectKey] != undefined)) {
-        return (doc.data()[objectKey]);
-      } else {
+  else{
+    return firebase.firestore().collection(collection).doc(doc).get().then(function(doc) {
+      if (doc.exists && (doc.data()[objectKey] != undefined) ) {
+        return ( doc.data()[objectKey] );
+      } else{
         return false;
       }
     })
   }
 }
 
-export async function getDocByObjectKey(collection, key, value) {
+export async function getDocByObjectKey(collection, key, value){
   return firebase.firestore().collection(collection)
-    .where(key, '==', value).get().then(function (querySnapshot) {
-      var data = []
-      querySnapshot.forEach(function (doc) {
-        if (doc.exists) {
-          data.push(doc.data());
-        } else {
-          console.log('No document found!');
-        }
-      });
-      return data;
+    .where(key, '==', value).get().then(function(querySnapshot) {
+      return querySnapshot.docs[0];
     });
 }
 
-export async function getDocWithinRange(collection, doc, strSearch) {
+export async function getDocWithinRange(collection, doc, strSearch){
   let strlength = strSearch.length;
-  let strFrontCode = strSearch.slice(0, strlength - 1);
-  let strEndCode = strSearch.slice(strlength - 1, strSearch.length);
+  let strFrontCode = strSearch.slice(0, strlength-1);
+  let strEndCode = strSearch.slice(strlength-1, strSearch.length);
 
   let startcode = strSearch;
-  let endcode = strFrontCode + String.fromCharCode(strEndCode.charCodeAt(0) + 1);
+  let endcode= strFrontCode + String.fromCharCode(strEndCode.charCodeAt(0) + 1);
 
   return firebase.firestore().collection(collection)
     .where(doc, '>=', startcode)
-    .where(doc, '<', endcode).get().then(function (querySnapshot) {
+    .where(doc, '<', endcode).get().then(function(querySnapshot) {
       querySnapshot.forEach(function (doc) {
         //console.log(doc.data());
       });
     });
 }
 
-export async function dataExist(collection, doc) {
+export async function dataExist(collection, doc){
   // check if data exists on the given path
-  return firebase.firestore().collection(collection).doc(doc).get().then(function (doc) {
+  return firebase.firestore().collection(collection).doc(doc).get().then(function(doc) {
     if (doc.exists) {
       return doc.data();
-    } else {
+    } else{
       return false;
     }
   })
 }
 
-export async function updateData(collection, doc, jsonObject) {
-  firebase.firestore().collection(collection).doc(doc).update(jsonObject)
-    .then(function () {
-      console.log("Document successfully written!");
-    })
-    .catch(function (error) {
-      console.log("Error writing document: ", error);
-    });
-}
-
-export async function saveDataWithoutDocId(collection, jsonObject) {
-  let docRef = await firebase.firestore().collection(collection).doc();
-  await docRef.set(jsonObject);
-  console.log(docRef)
+export async function updateData(collection, doc, jsonObject){
+  let docRef = await firebase.firestore().collection(collection).doc(doc);
+  await docRef.update(jsonObject);
   return docRef;
 }
 
-export async function saveData(collection, doc, jsonObject) {
+export async function saveDataWithoutDocId(collection, jsonObject){
+  let docRef = await firebase.firestore().collection(collection).doc();
+  await docRef.set(jsonObject);
+  return docRef;
+}
+
+export async function saveData(collection, doc, jsonObject){
   let docRef = await firebase.firestore().collection(collection).doc(doc);
   await docRef.set(jsonObject, { merge: true });
   return docRef;
 }
 
-export async function addToArray(collection, doc, array, value) {
+export async function addToArray(collection, doc, array, value){
   let docRef = await firebase.firestore().collection(collection).doc(doc);
   let docData = await docRef.get();
-  if (docData.exists && (docData.data()[array] != undefined)) {
+  if (docData.exists && (docData.data()[array] != undefined) ) {
     docRef.update({
       [array]: firebase.firestore.FieldValue.arrayUnion(value)
     });
   }
   else {
-    saveData(collection, doc, { [array]: [value] });
+    saveData(collection, doc, {[array]: [value]});
   }
   return docRef;
 }
 
-export async function uploadImage(imgUri, mime = 'image/jpeg', imagePath, name, databaseCollection, docRef, productFlag) {
+export async function uploadImage(imgUri, mime = 'image/jpeg', imagePath, name, databaseCollection, docRef, productFlag, databaseCollectionIndex = 0) {
   //blob
   const Blob = RNFetchBlob.polyfill.Blob;
   const fs = RNFetchBlob.fs;
@@ -155,24 +142,24 @@ export async function uploadImage(imgUri, mime = 'image/jpeg', imagePath, name, 
   let readingFile = await fs.readFile(uploadUri, 'base64');
   let blob = await Blob.build(readingFile, { type: `${mime};BASE64` });
 
-  console.log(name)
+console.log(name)
 
   let uploadTask = imageRef.put(blob, { contentType: mime, name: name });
 
   let progress = 0;
   //Listen for state changes, errors, and completion of the upload.
   uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-    function (snapshot) {
+    function(snapshot) {
       console.log('Bytes transferred ' + snapshot.bytesTransferred);
       console.log('Total bytes ' + snapshot.totalBytes);
       // var progress = ( (snapshot.bytesTransferred / snapshot.totalBytes) * 100 );
-      if (progress < 30)
+      if(progress < 30)
         progress += 10;
-      else if (progress >= 30)
+      else if(progress >= 30)
         progress += 5;
-      else if (progress >= 85)
+      else if(progress >= 85)
         progress += 1;
-      else if (progress >= 95)
+      else if(progress >= 95)
         progress += 0.1;
 
       _storeData(GlobalConst.STORAGE_KEYS.imageUploadProgress, progress.toString());
@@ -185,39 +172,39 @@ export async function uploadImage(imgUri, mime = 'image/jpeg', imagePath, name, 
           break;
       }
     },
-    function (error) {
+    function(error) {
       console.log(error);
-      _storeData(GlobalConst.STORAGE_KEYS.imageUploadProgress, '-1').then(() => { return 0 });
+      _storeData(GlobalConst.STORAGE_KEYS.imageUploadProgress, '-1').then(() => {return 0});
     },
-    function () {
+    function() {
       window.XMLHttpRequest = originalXMLHttpRequest;
       // Upload completed successfully, now we can get the download URL
-      uploadTask.snapshot.ref.getDownloadURL().then(async function (downloadURL) {
+      uploadTask.snapshot.ref.getDownloadURL().then(async function(downloadURL) {
         console.log('File available at', downloadURL);
 
         //TODO a better way to update the array
-        if (productFlag) {
+        if(productFlag){
           let docData = await docRef.get();
           let data = docData.data();
-          data.products[docData.data().products.length - 1].imageUrl = downloadURL
-          updateData(databaseCollection, docRef.id, data);
+          console.log(data[databaseCollection])
+          data[databaseCollection][databaseCollectionIndex].imageUrl = downloadURL
+          updateData('products', docRef.id, data);
           _storeData(GlobalConst.STORAGE_KEYS.imageUploadProgress, '100').then(() => {
             return 0
           });
         }
         else
-          saveData(databaseCollection, docRef.id, { imageUrl: downloadURL }).then(() => {
+          saveData(databaseCollection, docRef.id, {imageUrl: downloadURL}).then(() => {
             _storeData(GlobalConst.STORAGE_KEYS.imageUploadProgress, '100').then(() => {
               return 0
             });
           });
-      });
-    }
-  )
-}
+    });
+  }
+)}
 
 
-export async function downloadImage(folder, imageName) {
+export async function downloadImage(folder, imageName){
   var storageRef = firebase.storage().ref();
   var pathRef = storageRef.child(folder + '/' + imageName);
 
@@ -227,11 +214,11 @@ export async function downloadImage(folder, imageName) {
 
 
 
-export async function deleteData(collection, doc, objectKey) {
-  if (objectKey === undefined) {
+export async function deleteData(collection, doc, objectKey){
+  if(objectKey === undefined){
     await firebase.firestore().collection(collection).doc(doc).delete();
   }
-  else {
+  else{
     let docRef = await firebase.firestore().collection(collection).doc(doc);
     await docRef.update({ [objectKey]: firebase.firestore.FieldValue.delete() });
   }
@@ -244,5 +231,4 @@ export function generateId(number) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   return text;
 }
-
 
