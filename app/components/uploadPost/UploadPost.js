@@ -8,7 +8,8 @@ import {
   TextInput,
   ScrollView,
   Image,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from "react-native";
 import { Header, Left, Right, Icon, Button, Title, Body } from "native-base";
 import FAIcon from "react-native-vector-icons/FontAwesome";
@@ -134,10 +135,10 @@ export default class UploadPost extends Component {
           locationText: 'lat=' + location.latitude + ", lon=" + location.longitude,
         }
         )
-
       })
       .catch(error => {
         const { code, message } = error;
+        Alert.alert("ERROR", message)
         console.warn(code, message);
       })
   }

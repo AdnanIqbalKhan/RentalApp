@@ -293,14 +293,11 @@ class Catalog extends Component {
 
   componentDidMount() {
     _this = this
-    console.log(".........................................")
     checkPermission().then(() => {
-      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
       createNotificationListeners().then((notificationListener, notificationOpenedListener, messageListener) => {
         _this.notificationListener = notificationListener;
         _this.notificationListener = notificationOpenedListener;
         _this.notificationListener = messageListener
-        console.log("#############################")
       }).catch((e) => console.log(e))
     }).catch((e) => console.log(e))
   }
@@ -331,6 +328,7 @@ class Catalog extends Component {
   };
 
   selectCategory(id) {
+    this.props.navigation.setParams({ filteredData: null })
     let a = this.state.catalogDataBackup.filter((item, i) => {
       return item.category.id == id;
     })
@@ -341,6 +339,7 @@ class Catalog extends Component {
   }
 
   searchText(txt) {
+    this.props.navigation.setParams({ filteredData: null })
     if (txt == '') {
       this.setState({
         catalogData: this.state.catalogDataBackup
@@ -359,6 +358,10 @@ class Catalog extends Component {
   render() {
     var displayType = this.props.navigation.getParam('displayType', 'grid')
     let catalogData = this.props.navigation.getParam('filteredData', this.state.catalogData)
+    if (catalogData == null) {
+      catalogData = this.state.catalogData
+    }
+    console.log(catalogData)
     return (
       <View style={styles.container}>
         <View>
@@ -430,7 +433,7 @@ class Catalog extends Component {
           :
           catalogData != [] ?
             <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: theme.sizes.padding }}>
+              contentContainerStyle={{ paddingBottom: theme.sizes.padding * 6 }}>
               <View style={{ flex: 1, backgroundColor: 'white', paddingTop: 5 }}>
                 {displayType == 'grid' ?
                   <FlatGrid
@@ -453,6 +456,7 @@ class Catalog extends Component {
                   <FlatList
                     style={styles.gridView}
                     data={catalogData}
+                    keyExtractor={item => item.id}
                     renderItem={({ item }) => (
                       <View style={{ flexDirection: 'row', height: 105, backgroundColor: 'white' }}>
                         <View>
