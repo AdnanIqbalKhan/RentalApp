@@ -361,7 +361,6 @@ class Catalog extends Component {
     if (catalogData == null) {
       catalogData = this.state.catalogData
     }
-    console.log(catalogData)
     return (
       <View style={styles.container}>
         <View>

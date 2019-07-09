@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
-import { Alert } from 'react-native';
+import { _storeData, _retrieveData } from '../../backend/AsyncFuncs';
+import GlobalConst from '../../config/GlobalConst';
+import { saveData } from './utility'
 
 export async function checkPermission() {
     const enabled = await firebase.messaging().hasPermission();
@@ -14,16 +16,17 @@ export async function checkPermission() {
 
 //3
 export async function getToken() {
-    let fcmToken = await AsyncStorage.getItem('fcmToken');
+    let fcmToken = await _retrieveData('fcmToken');
     if (!fcmToken) {
         fcmToken = await firebase.messaging().getToken();
         if (fcmToken) {
             // user has a device token
             // console.log('fcmToken:', fcmToken);
-            await AsyncStorage.setItem('fcmToken', fcmToken);
+            await _storeData('fcmToken', fcmToken);
         }
     }
-
+    await saveData('users', await _retrieveData(GlobalConst.STORAGE_KEYS.userId), { fcmToken: fcmToken })
+    // console.log('userId', await _retrieveData(GlobalConst.STORAGE_KEYS.userId))
     // console.log('fcmToken:', fcmToken);
     // Alert.alert('fcmToken:', fcmToken)
 }

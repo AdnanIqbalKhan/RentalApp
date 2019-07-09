@@ -22,6 +22,7 @@ export default class ItemDetails extends Component {
     },
     headerTitleStyle: { textAlign: 'center', alignSelf: 'center', color: 'white' },
   };
+  itemId = ""
 
 
   state = {
@@ -33,7 +34,7 @@ export default class ItemDetails extends Component {
     super(props)
 
     const { navigation } = this.props;
-    const itemId = navigation.getParam('id', 'NO-ID');
+    this.itemId = navigation.getParam('id', 'NO-ID');
     const item = navigation.getParam('item', 'NO-ITEM');
 
     connectFirebase()
@@ -326,7 +327,7 @@ export default class ItemDetails extends Component {
             </View>
             <View style={{ flexDirection: 'row', marginTop: 8, marginBottom: 5, alignSelf: 'center' }}>
               <View>
-                <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('RequestRental')}>
+                <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('RequestRental', { id: this.itemId })}>
                   <Text style={styles.textcolor}>Rent Now</Text>
                 </TouchableOpacity>
               </View>
