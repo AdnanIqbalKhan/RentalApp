@@ -40,11 +40,11 @@ export default class UploadPost extends Component {
 
   resetForm(c = true) {
     let deliveryOptions = [
-      { value: "Pickup" },
       { value: "Delivery" },
-      { value: "Pickup and Delivery" },
       { value: "Exchange Post Delivery" },
       { value: "Exchange Post Delivery and Pickup" }
+      { value: "Pickup" },
+      { value: "Pickup and Delivery" },
     ];
 
     let a = {
