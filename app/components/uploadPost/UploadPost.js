@@ -9,7 +9,9 @@ import {
   ScrollView,
   Image,
   KeyboardAvoidingView,
-  Alert
+  Alert,
+  ActivityIndicator,
+  Modal
 } from "react-native";
 import { Header, Left, Right, Icon, Button, Title, Body } from "native-base";
 import FAIcon from "react-native-vector-icons/FontAwesome";
@@ -35,16 +37,16 @@ export default class UploadPost extends Component {
   };
 
   state = {
-
+    loading: false
   }
 
   resetForm(c = true) {
     let deliveryOptions = [
       { value: "Delivery" },
       { value: "Exchange Post Delivery" },
-      { value: "Exchange Post Delivery and Pickup" }
+      { value: "Exchange Post Delivery and Pickup" },
       { value: "Pickup" },
-      { value: "Pickup and Delivery" },
+      { value: "Pickup and Delivery" }
     ];
 
     let a = {
@@ -144,6 +146,7 @@ export default class UploadPost extends Component {
   }
 
   uploadPost() {
+    this.setState({ loading: true })
     connectFirebase()
     postData = {
       title: this.state.titleText,
@@ -172,15 +175,53 @@ export default class UploadPost extends Component {
         updateData('posts', docRef.id, { id: docRef.id })
 
         this.resetForm()
+        Alert.alert(
+          'Upload Post',
+          'Post uploaded successfully',
+          [
+            {
+              text: 'OK', onPress: () => {
+                this.setState({ loading: false })
+                this.props.navigation.navigate('Catalog')
+              }
+            },
+          ],
+          { cancelable: false },
+        );
       })
       .catch(error => {
         const { code, message } = error;
         console.warn(code, message);
+        Alert.alert(
+          'Error Occur',
+          message,
+          [
+            {
+              text: 'OK', onPress: () => {
+                this.setState({ loading: false })
+              }
+            },
+          ],
+          { cancelable: false },
+        );
       })
   }
 
+
+
   render() {
     let categoriesList = mainCategoriesList.map(n => { return { value: n.name, id: n.id } });
+
+    const CustomProgressBar = ({ visible }) => (
+      <Modal onRequestClose={() => null} visible={visible}>
+        <View style={{ flex: 1, backgroundColor: '#dcdcdc', alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ borderRadius: 10, backgroundColor: 'white', padding: 25 }}>
+            <Text style={{ fontSize: 20, fontWeight: '200' }}>Uploading...</Text>
+            <ActivityIndicator size="large" />
+          </View>
+        </View>
+      </Modal>
+    )
 
     return (
       <View style={styles.container}>
@@ -209,155 +250,161 @@ export default class UploadPost extends Component {
             </Button>
           </Right>
         </Header>
-        <ScrollView>
-          <KeyboardAvoidingView behavior="padding" enabled>
-            <View
-              style={{ backgroundColor: "white", width: "100%", height: 150 }}
-            >
-              <Image
-                source={this.state.imageSource}
-                style={{ width: 200, height: 150, alignSelf: "center" }}
-              />
-            </View>
-            <View>
-              <TouchableOpacity style={styles.btnCam}>
-                <FAIcon
-                  name="camera"
-                  size={42}
-                  style={{ color: "#1b96fe", height: 60 }}
-                  onPress={this.selectImage}
+
+        {this.state.loading ?
+          <CustomProgressBar />
+          :
+          <ScrollView>
+            <KeyboardAvoidingView behavior="padding" enabled>
+              <View
+                style={{ backgroundColor: "white", width: "100%", height: 150 }}
+              >
+                <Image
+                  source={this.state.imageSource}
+                  style={{ width: 200, height: 150, alignSelf: "center" }}
                 />
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.heading}>Title</Text>
-            <TextInput
-              placeholder="Name, Size etc"
-              keyboardAppearance="default"
-              autoCapitalize="none"
-              returnKeyType="next"
-              style={styles.textbox1}
-              onChangeText={titleText => this.setState({ titleText })}
-              autoCorrect={false}
-            />
-
-            <Text style={styles.heading}>Description</Text>
-            <TextInput
-              placeholder="Extra Details About Rental"
-              keyboardAppearance="default"
-              autoCapitalize="none"
-              returnKeyType="next"
-              style={styles.textbox1}
-              onChangeText={descriptionText =>
-                this.setState({ descriptionText })
-              }
-              autoCorrect={false}
-            />
-
-            <Text style={styles.heading}>Daily Rental Rate</Text>
-            <TextInput
-              placeholder="The Price Per Day"
-              keyboardAppearance="default"
-              keyboardType="number-pad"
-              autoCapitalize="none"
-              returnKeyType="next"
-              style={styles.textbox1}
-              onChangeText={dailyRateText => this.setState({ dailyRateText })}
-              autoCorrect={false}
-            />
-
-            <Text style={styles.heading}>Discount For weekly Rental (percentage)</Text>
-            <TextInput
-              placeholder="Enter Percentage as whole Number 10 for 10%"
-              keyboardAppearance="default"
-              keyboardType="number-pad"
-              autoCapitalize="none"
-              returnKeyType="next"
-              style={styles.textbox1}
-              onChangeText={weeklyDiscountText =>
-                this.setState({ weeklyDiscountText })
-              }
-              autoCorrect={false}
-            />
-
-            <Text style={styles.heading}>Category Selection</Text>
-            <View style={styles.selectBox}>
-              <Dropdown
-                label='Select Category'
-                data={categoriesList}
-                onChangeText={this.onChangeTextCategories}
-              />
-            </View>
-            <Text style={styles.heading}>Subcategory Selection</Text>
-            <View style={styles.selectBox}>
-              <Dropdown
-                label='Select Sub Category'
-                data={this.state.subCatList}
-                onChangeText={(value, index, data) => {
-                  this.setState({
-                    selectedSubCategory: data[index]
-                  })
-                }}
-              />
-            </View>
-
-            <Text style={styles.heading}>Delivery Option</Text>
-            <View style={styles.selectBox}>
-              <Dropdown
-                label="Select Delivery / Pickup"
-                data={this.state.deliveryPickupOptionData}
-                value={this.state.deliveryPickupOption.value}
-                onChangeText={(value, index, data) => {
-                  this.setState({
-                    deliveryPickupOption: data[index]
-                  })
-                }} />
-            </View>
-            <Text style={styles.heading}>Delivery Fee</Text>
-            <TextInput
-              placeholder="The Price for delivery"
-              keyboardAppearance="default"
-              keyboardType="number-pad"
-              autoCapitalize="none"
-              returnKeyType="next"
-              style={styles.textbox1}
-              onChangeText={deliveryFeeText =>
-                this.setState({ deliveryFeeText })
-              }
-              autoCorrect={false}
-            />
-
-            <Text style={styles.heading}>Item Location</Text>
-            <View style={{ flexDirection: "row" }}>
-              <View>
-                <Text style={styles.textboxLoc}>{this.state.locationText}</Text>
               </View>
               <View>
-                <TouchableOpacity
-                  style={styles.btnLoc}
-                  onPress={this.selectLocation}
-                >
-                  <Text style={styles.textcolor}>Get My Location</Text>
+                <TouchableOpacity style={styles.btnCam}>
+                  <FAIcon
+                    name="camera"
+                    size={42}
+                    style={{ color: "#1b96fe", height: 60 }}
+                    onPress={this.selectImage}
+                  />
                 </TouchableOpacity>
               </View>
-            </View>
+              <Text style={styles.heading}>Title</Text>
+              <TextInput
+                placeholder="Name, Size etc"
+                keyboardAppearance="default"
+                autoCapitalize="none"
+                returnKeyType="next"
+                style={styles.textbox1}
+                onChangeText={titleText => this.setState({ titleText })}
+                autoCorrect={false}
+              />
 
-            <Text style={styles.heading}>Taxes(If Applicable)</Text>
-            <TextInput
-              placeholder="Taxes"
-              keyboardAppearance="default"
-              keyboardType="number-pad"
-              autoCapitalize="none"
-              returnKeyType="next"
-              style={styles.textbox1}
-              onChangeText={taxesText => this.setState({ taxesText })}
-              autoCorrect={false}
-            />
+              <Text style={styles.heading}>Description</Text>
+              <TextInput
+                placeholder="Extra Details About Rental"
+                keyboardAppearance="default"
+                autoCapitalize="none"
+                returnKeyType="next"
+                style={styles.textbox1}
+                onChangeText={descriptionText =>
+                  this.setState({ descriptionText })
+                }
+                autoCorrect={false}
+              />
 
-            <TouchableOpacity style={styles.btn} onPress={this.uploadPost}>
-              <Text style={styles.textcolor1}>Upload Post</Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
-        </ScrollView>
+              <Text style={styles.heading}>Daily Rental Rate</Text>
+              <TextInput
+                placeholder="The Price Per Day"
+                keyboardAppearance="default"
+                keyboardType="number-pad"
+                autoCapitalize="none"
+                returnKeyType="next"
+                style={styles.textbox1}
+                onChangeText={dailyRateText => this.setState({ dailyRateText })}
+                autoCorrect={false}
+              />
+
+              <Text style={styles.heading}>Discount For weekly Rental (percentage)</Text>
+              <TextInput
+                placeholder="Enter Percentage as whole Number 10 for 10%"
+                keyboardAppearance="default"
+                keyboardType="number-pad"
+                autoCapitalize="none"
+                returnKeyType="next"
+                style={styles.textbox1}
+                onChangeText={weeklyDiscountText =>
+                  this.setState({ weeklyDiscountText })
+                }
+                autoCorrect={false}
+              />
+
+              <Text style={styles.heading}>Category Selection</Text>
+              <View style={styles.selectBox}>
+                <Dropdown
+                  label='Select Category'
+                  data={categoriesList}
+                  onChangeText={this.onChangeTextCategories}
+                />
+              </View>
+              <Text style={styles.heading}>Subcategory Selection</Text>
+              <View style={styles.selectBox}>
+                <Dropdown
+                  label='Select Sub Category'
+                  data={this.state.subCatList}
+                  onChangeText={(value, index, data) => {
+                    this.setState({
+                      selectedSubCategory: data[index]
+                    })
+                  }}
+                />
+              </View>
+
+              <Text style={styles.heading}>Delivery Option</Text>
+              <View style={styles.selectBox}>
+                <Dropdown
+                  label="Select Delivery / Pickup"
+                  data={this.state.deliveryPickupOptionData}
+                  value={this.state.deliveryPickupOption.value}
+                  onChangeText={(value, index, data) => {
+                    this.setState({
+                      deliveryPickupOption: data[index]
+                    })
+                  }} />
+              </View>
+              <Text style={styles.heading}>Delivery Fee</Text>
+              <TextInput
+                placeholder="The Price for delivery"
+                keyboardAppearance="default"
+                keyboardType="number-pad"
+                autoCapitalize="none"
+                returnKeyType="next"
+                style={styles.textbox1}
+                onChangeText={deliveryFeeText =>
+                  this.setState({ deliveryFeeText })
+                }
+                autoCorrect={false}
+              />
+
+              <Text style={styles.heading}>Item Location</Text>
+              <View style={{ flexDirection: "row" }}>
+                <View>
+                  <Text style={styles.textboxLoc}>{this.state.locationText}</Text>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    style={styles.btnLoc}
+                    onPress={this.selectLocation}
+                  >
+                    <Text style={styles.textcolor}>Get My Location</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <Text style={styles.heading}>Taxes(If Applicable)</Text>
+              <TextInput
+                placeholder="Taxes"
+                keyboardAppearance="default"
+                keyboardType="number-pad"
+                autoCapitalize="none"
+                returnKeyType="next"
+                style={styles.textbox1}
+                onChangeText={taxesText => this.setState({ taxesText })}
+                autoCorrect={false}
+              />
+
+              <TouchableOpacity style={styles.btn} onPress={this.uploadPost}>
+                <Text style={styles.textcolor1}>Upload Post</Text>
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
+          </ScrollView>
+        }
+
       </View>
     );
   }
@@ -493,5 +540,15 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 18,
     textAlign: "center"
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F5FCFF88'
   }
 });
