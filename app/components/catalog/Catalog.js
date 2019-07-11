@@ -28,11 +28,13 @@ import Category from './CatalogCategory';
 import {
   connectFirebase,
   getAllOfCollection,
+  getDocByNotObjectKey
 } from "../../backend/firebase/utility";
 
 import { mainCategoriesList } from '../../backend/data/CategoriesList';
 import { checkPermission, createNotificationListeners } from '../../backend/firebase/fcm'
-
+import GlobalConst from '../../config/GlobalConst';
+import { _retrieveData } from '../../backend/AsyncFuncs'
 
 const { width, height } = Dimensions.get('window');
 
@@ -274,21 +276,25 @@ class Catalog extends Component {
     this.selectCategory = this.selectCategory.bind(this)
 
     connectFirebase();
-    getAllOfCollection('posts')
-      .then(r => {
-        this.setState({
-          catalogData: r,
-          catalogDataBackup: r,
-          loading: false
+    _retrieveData(GlobalConst.STORAGE_KEYS.userId).then((userID) => {
+      getDocByNotObjectKey('posts', 'userID',userID)
+        .then(r => {
+          this.setState({
+            catalogData: r,
+            catalogDataBackup: r,
+            loading: false
+          })
         })
-      })
-      .catch(error => {
-        const { code, message } = error;
-        this.setState({
-          loading: false
+        .catch(error => {
+          const { code, message } = error;
+          this.setState({
+            loading: false
+          })
+          console.warn(code, message);
         })
-        console.warn(code, message);
-      })
+    }).catch(e => {
+      console.warn(e)
+    })
   }
 
   componentDidMount() {
