@@ -5,7 +5,7 @@ let db = admin.firestore();
 
 function getUser(userId) {
     // [START get_document]
-    let userRef = db.collection('user').doc(userId);
+    let userRef = db.collection('users').doc(userId);
     let getDoc = userRef.get()
         .then(doc => {
             if (!doc.exists) {
@@ -15,7 +15,7 @@ function getUser(userId) {
                 console.log('Document data:', doc.data());
                 return doc.data()
             }
-           
+
         })
         .catch(err => {
             console.log('Error getting document', err);
@@ -45,20 +45,8 @@ exports.sendNotification = functions.firestore
             }
         };
 
-        // Send notifications to all tokens.
-        const response = admin.messaging().sendToDevice([token], payload);
-        // For each message check if there was an error.
-        const tokensToRemove = [];
-        response.results.forEach((result, index) => {
-            const error = result.error;
-            if (error) {
-                console.error('Failure sending notification to', tokens[index], error);
-                // Cleanup the tokens who are not registered anymore.
-                if (error.code === 'messaging/invalid-registration-token' ||
-                    error.code === 'messaging/registration-token-not-registered') {
-                    tokensToRemove.push(tokensSnapshot.ref.child(tokens[index]).remove());
-                }
-            }
+        console.log(payload)
+        return admin.messaging().sendToDevice(token, payload).then(reponse => {
+            return console.log(`A new notification for ${onwer}`);
         });
-        return Promise.all(tokensToRemove);
     });
