@@ -21,6 +21,7 @@ import { _retrieveData } from '../../backend/AsyncFuncs'
 import {
     connectFirebase,
     getData,
+    updateData,
     saveDataWithoutDocId
 } from "../../backend/firebase/utility";
 
@@ -71,17 +72,32 @@ export default class RequestRental extends Component {
         connectFirebase()
         saveDataWithoutDocId('requests', this.state.data)
             .then(docRef => {
-                Alert.alert(
-                    'Requesting',
-                    'Request generated successfully',
-                    [{
-                        text: 'OK', onPress: () => {
-                            this.setState({ loading: false })
-                            this.props.navigation.navigate('Catalog')
-                        }
-                    },],
-                    { cancelable: false },
-                );
+                updateData('posts', this.state.data.postId, { 'status': 'Pending' })
+                    .then(docRef => {
+                        Alert.alert(
+                            'Requesting',
+                            'Request generated successfully',
+                            [{
+                                text: 'OK', onPress: () => {
+                                    this.setState({ loading: false })
+                                    this.props.navigation.navigate('Catalog')
+                                }
+                            },],
+                            { cancelable: false },
+                        );
+                    }).catch(error => {
+                        const { code, message } = error;
+                        console.warn(code, message);
+                        Alert.alert(
+                            'Error Occur',
+                            message, [{
+                                text: 'OK', onPress: () => {
+                                    this.setState({ loading: false })
+                                }
+                            },],
+                            { cancelable: false },
+                        );
+                    })
             })
             .catch(error => {
                 const { code, message } = error;

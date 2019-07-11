@@ -3,9 +3,16 @@ import { View, Text, FlatList, ActivityIndicator, StyleSheet, Image, Alert } fro
 import { ListItem, SearchBar } from 'react-native-elements';
 import { Header, Left, Right, Icon, Button, Title, Body } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+
+import GlobalConst from '../../config/GlobalConst';
+import { _retrieveData } from '../../backend/AsyncFuncs'
+
 import {
   connectFirebase,
   getData,
+  getDocByObjectKey,
+  getDocByObjectKeyArray
 } from "../../backend/firebase/utility";
 
 export default class RentRequest extends Component {
@@ -19,7 +26,6 @@ export default class RentRequest extends Component {
       loading: false,
       data: [],
       error: null,
-      itemId : "rrrrrrrrrrrrrr"
     };
 
     this.arrayholder = [];
@@ -27,11 +33,51 @@ export default class RentRequest extends Component {
   }
 
   componentDidMount() {
-    const itemId = this.props.navigation.getParam('id', 'NO-ID');
-    this.setState({ itemId })
-    console.log(itemId)
-    console.log("hellllllllo")
-    // this.makeRemoteRequest();
+    var that = _this
+    connectFirebase()
+    _retrieveData(GlobalConst.STORAGE_KEYS.userId).then((userID) => {
+      getDocByObjectKey('requests', 'requesterId', userID)
+        .then(requests => {
+          var postIds = requests.map(a => a.postId);
+          getDocByObjectKeyArray('posts', 'id', postIds).then((posts) => {
+            that.setState({
+              data: posts,
+              loading: false
+            })
+            if (posts.length == 0) {
+              Alert.alert(
+                'Info',
+                'No Requested Item found',
+                [{
+                  text: 'OK', onPress: () => {
+                    this.props.navigation.navigate('Catalog')
+                  }
+                },],
+                { cancelable: false },
+              );
+            }
+          }).catch(error => {
+            const { code, message } = error;
+            this.setState({
+              loading: false
+            })
+            console.warn(code, message);
+          })
+        })
+        .catch(error => {
+          const { code, message } = error;
+          this.setState({
+            loading: false
+          })
+          console.warn(code, message);
+        })
+    }).catch(error => {
+      const { code, message } = error;
+      this.setState({
+        loading: false
+      })
+      console.warn(code, message);
+    })
   }
 
   makeRemoteRequest = () => {
@@ -64,38 +110,18 @@ export default class RentRequest extends Component {
   };
 
   render() {
-    console.log(this.state.itemId)
-    if (this.state.loading) {
-      return (
-        <View style={{ flex: 1 }}>
-          <Header style={{ backgroundColor: '#1b96fe' }}>
-            <Left style={{ flexDirection: 'row' }}>
-              <Button transparent>
-                <Icon name="menu" color='white' onPress={() => this.props.navigation.openDrawer()} />
-              </Button>
-              <Button transparent style={{ margingLeft: 20 }}>
-                <Icon name="chatboxes" color='white' />
-              </Button>
-            </Left>
-            <Body style={{ flex: 1, marginLeft: 40 }}>
-              <Title style={{ fontSize: 20 }}>My Request</Title>
-            </Body>
-            <Right style={{ flexDirection: 'row' }}>
-              <Button transparent >
-                <Icon name="notifications" color='white' />
-              </Button>
-              <Button transparent>
-                <Icon name="cart"
-                  color='white'
-                />
-              </Button>
-            </Right>
-          </Header>
-          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <ActivityIndicator />
+    const CustomProgressBar = ({ visible }) => (
+      <Modal onRequestClose={() => null} visible={visible}>
+        <View style={{ flex: 1, backgroundColor: '#dcdcdc', alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ borderRadius: 10, backgroundColor: 'white', padding: 25 }}>
+            <Text style={{ fontSize: 20, fontWeight: '200' }}>Generating Request...</Text>
+            <ActivityIndicator size="large" />
           </View>
         </View>
-      );
+      </Modal>
+    )
+    if (this.state.loading) {
+      return (<CustomProgressBar />);
     }
     return (
       <View >
@@ -129,11 +155,11 @@ export default class RentRequest extends Component {
 
             <View style={{ flexDirection: 'row', height: 105, backgroundColor: 'white' }}>
               <View>
-                <Image source={require('../../assets/Gen.jpg')} style={{ width: 100, height: 100 }} />
+                <Image source={{ uri: item.imageUrl }} style={{ width: 100, height: 100 }} />
               </View>
               <View style={{ marginLeft: 8 }}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 2, color: '#1b96fe' }}>Item Name</Text>
+                  <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 2, color: '#1b96fe' }}>{item.title}</Text>
                   <Ionicons style={{ marginLeft: '48%' }} name={'ios-heart'} size={26} color={'#1b96fe'} />
                 </View>
                 <Text style={styles.avatarRating}>4.5<Ionicons name={'ios-star'} size={16}
@@ -143,7 +169,7 @@ export default class RentRequest extends Component {
                   <Text style={{ fontSize: 18, marginLeft: '5%' }}>Delivery: $15</Text>
                 </View>
                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                  <Text style={{ fontSize: 16 }}>Status: Approved</Text>
+                  <Text style={{ fontSize: 16 }}>Status: {item.status}</Text>
                   <View style={{ flexDirection: 'row', marginLeft: '28%' }}>
                     <Ionicons name={'ios-pin'} size={22} color={'#1b96fe'} />
                     <Text style={{ fontSize: 16, color: '#1b96fe' }}>5 mil</Text>

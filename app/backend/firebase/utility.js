@@ -43,16 +43,16 @@ export async function getData(collection, doc, objectKey) {
     return firebase.firestore().collection(collection).doc(doc).get().then(function (doc) {
       if (doc.exists) {
         return doc.data();
-      } else{
+      } else {
         return false;
       }
     })
   }
-  else{
-    return firebase.firestore().collection(collection).doc(doc).get().then(function(doc) {
-      if (doc.exists && (doc.data()[objectKey] != undefined) ) {
-        return ( doc.data()[objectKey] );
-      } else{
+  else {
+    return firebase.firestore().collection(collection).doc(doc).get().then(function (doc) {
+      if (doc.exists && (doc.data()[objectKey] != undefined)) {
+        return (doc.data()[objectKey]);
+      } else {
         return false;
       }
     })
@@ -72,6 +72,16 @@ export async function getDocByObjectKey(collection, key, value) {
       });
       return data;
     });
+}
+
+export async function getDocByObjectKeyArray(collection, key, values) {
+  let data = await getAllOfCollection(collection)
+  return data.filter((e) => values.includes(e[key]))
+}
+
+export async function getDocByNotObjectKey(collection, key, value) {
+  let data = await getAllOfCollection(collection)
+  return data.filter((e) => e[key] != value)
 }
 
 export async function getDocWithinRange(collection, doc, strSearch) {

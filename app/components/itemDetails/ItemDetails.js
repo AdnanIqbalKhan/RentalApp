@@ -90,7 +90,8 @@ export default class ItemDetails extends Component {
                   </View>
                 </View>
                 <View>
-                  <TouchableOpacity style={styles.btnrent}>
+                  <TouchableOpacity style={styles.btnrent} onPress={() => this.props.navigation.navigate('RequestRental',
+                  { item_id: this.itemId, item: this.state.itemData, post_user: this.state.itemUser })}>
                     <Text style={styles.textcolorrent}>Rent now</Text>
                   </TouchableOpacity>
                 </View>
@@ -199,10 +200,10 @@ export default class ItemDetails extends Component {
               </Text>
             </View>
             <View style={{ marginTop: 5 }}>
+
               <Calendar
                 // Specify style for calendar container element. Default = {}
                 style={{
-
                   height: 350,
                   width: '96%',
                   shadowColor: '#000',
@@ -327,7 +328,8 @@ export default class ItemDetails extends Component {
             </View>
             <View style={{ flexDirection: 'row', marginTop: 8, marginBottom: 5, alignSelf: 'center' }}>
               <View>
-                <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('RequestRental', { id: this.itemId })}>
+                <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('RequestRental',
+                  { item_id: this.itemId, item: this.state.itemData, post_user: this.state.itemUser })}>
                   <Text style={styles.textcolor}>Rent Now</Text>
                 </TouchableOpacity>
               </View>
