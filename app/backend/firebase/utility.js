@@ -76,7 +76,7 @@ export async function getDocByObjectKey(collection, key, value) {
 
 export async function getDocByObjectKeyArray(collection, key, values) {
   let data = await getAllOfCollection(collection)
-  return data.filter((e) => values.includes(e[key]))
+  return data.filter((e) =>  values.includes(e[key]))
 }
 
 export async function getDocByNotObjectKey(collection, key, value) {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, StyleSheet, Image, Alert, Modal } from 'react-native';
 import { ListItem, SearchBar } from 'react-native-elements';
 import { Header, Left, Right, Icon, Button, Title, Body } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -23,23 +23,25 @@ export default class RentRequest extends Component {
     super(props);
 
     this.state = {
-      loading: false,
+      loading: true,
       data: [],
       error: null,
     };
-
     this.arrayholder = [];
 
   }
 
   componentDidMount() {
-    var that = _this
+    var that = this
     connectFirebase()
     _retrieveData(GlobalConst.STORAGE_KEYS.userId).then((userID) => {
       getDocByObjectKey('requests', 'requesterId', userID)
         .then(requests => {
           var postIds = requests.map(a => a.postId);
+          console.log(postIds)
           getDocByObjectKeyArray('posts', 'id', postIds).then((posts) => {
+            console.log("hhhhh")
+            console.log(posts)
             that.setState({
               data: posts,
               loading: false
@@ -110,18 +112,8 @@ export default class RentRequest extends Component {
   };
 
   render() {
-    const CustomProgressBar = ({ visible }) => (
-      <Modal onRequestClose={() => null} visible={visible}>
-        <View style={{ flex: 1, backgroundColor: '#dcdcdc', alignItems: 'center', justifyContent: 'center' }}>
-          <View style={{ borderRadius: 10, backgroundColor: 'white', padding: 25 }}>
-            <Text style={{ fontSize: 20, fontWeight: '200' }}>Generating Request...</Text>
-            <ActivityIndicator size="large" />
-          </View>
-        </View>
-      </Modal>
-    )
     if (this.state.loading) {
-      return (<CustomProgressBar />);
+      return <ActivityIndicator size="large" />;
     }
     return (
       <View >
