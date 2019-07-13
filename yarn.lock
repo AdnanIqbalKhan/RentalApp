@@ -600,7 +600,6 @@
 "@firebase/app@0.4.9":
   version "0.4.9"
   resolved "https://registry.yarnpkg.com/@firebase/app/-/app-0.4.9.tgz#fc1ca549c5991b8a25974d114dc14deb633157e5"
-  integrity sha512-M1An/Id2ozNWbEeanLmczqgu7nS7Qq62u8yjdGOuePhJNie61/10zwPNETGKW/M+sYD6JaZYIsIhP2bQF9ZoDQ==
   dependencies:
     "@firebase/app-types" "0.4.0"
     "@firebase/logger" "0.1.17"
@@ -626,7 +625,6 @@
 "@firebase/database@0.4.6":
   version "0.4.6"
   resolved "https://registry.yarnpkg.com/@firebase/database/-/database-0.4.6.tgz#eae68a5bee62119b12a44dab3691dbe641a3614f"
-  integrity sha512-EpH5JUybuebVzUK1Z1wQ33Hjs8ZJbM6pyAlHDgWcqe4c7hNsHK8QNIxbQXHVfjCtu+EBneFM3MlYF5cWka5Kzw==
   dependencies:
     "@firebase/database-types" "0.4.0"
     "@firebase/logger" "0.1.17"
@@ -637,12 +635,10 @@
 "@firebase/firestore-types@1.4.1":
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/@firebase/firestore-types/-/firestore-types-1.4.1.tgz#04a0863888293b05482afc789731729341475505"
-  integrity sha512-F+mpOAzA+Xk6rZ2KRtRpqp3fULLDaFGWPyTBZthHkgq8ku3Q/C/KGfWUNOy38M65Mb0WM5zQcOvNkYt/o+YQjA==
 
 "@firebase/firestore@1.4.3":
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/@firebase/firestore/-/firestore-1.4.3.tgz#28225d15bd15dc568a4618461a14743009d3d941"
-  integrity sha512-P4AFVFRBcSKlfLbfXCbY9HUFF846v0ln26XTD9m8sASvPnsumDFkRTt/ClrEX/FCrVFSRLtEiOp36FmCAbTrGQ==
   dependencies:
     "@firebase/firestore-types" "1.4.1"
     "@firebase/logger" "0.1.17"
@@ -654,12 +650,10 @@
 "@firebase/functions-types@0.3.6":
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/@firebase/functions-types/-/functions-types-0.3.6.tgz#27516f986ec0fad71d39797a8869d08b970c4123"
-  integrity sha512-OIWXsaUBNSA7ifkrTFKwNMDgs1DCk6dC7xwofRBIrJP3ZxLPxRV79KyKKqcThe5Ie6JeG6oyFAIK5CMTYa5Ebg==
 
 "@firebase/functions@0.4.10":
   version "0.4.10"
   resolved "https://registry.yarnpkg.com/@firebase/functions/-/functions-0.4.10.tgz#90e363a98b12697ec0e74a4e16ce86493dfc5465"
-  integrity sha512-agxHXkKCacJtThM2gctr6sKhUH3A3t9+YcM78SnEWdN8ubE4F8MaSsR0oPhpmFHcwJKEs+q5JieDmELTkRGjuw==
   dependencies:
     "@firebase/functions-types" "0.3.6"
     "@firebase/messaging-types" "0.3.0"
@@ -673,7 +667,6 @@
 "@firebase/installations@0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@firebase/installations/-/installations-0.1.7.tgz#c9dadad29be48824126f753fb4b66285c8c46829"
-  integrity sha512-+OxqxtiOS7fJaVNc886IurARFrcVK16DnWdrXn6XdIEE373OBo0Mh+PWyESU9uFh6Yx6h2z5a/b4IpVRT4QgGA==
   dependencies:
     "@firebase/installations-types" "0.1.1"
     "@firebase/util" "0.2.20"
@@ -683,7 +676,6 @@
 "@firebase/logger@0.1.17":
   version "0.1.17"
   resolved "https://registry.yarnpkg.com/@firebase/logger/-/logger-0.1.17.tgz#7a70a8c605dfaa069771ca9663e30fd08a6b2513"
-  integrity sha512-vCuurlKhvEjN5SGbIGfHhVhMsRM6RknAjbEKbT6CgmD6fUnNH2oE1MwbafBK3nLc7i9sQFwZUU/fi4P0Nu/McQ==
 
 "@firebase/messaging-types@0.3.0":
   version "0.3.0"
@@ -692,7 +684,6 @@
 "@firebase/messaging@0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@firebase/messaging/-/messaging-0.4.3.tgz#9552549e994cceaae4af57e07bc936a2c53e42a7"
-  integrity sha512-5X+ne6m9oK/CXvRecq+5WKzAoIO9/islwfr42QZEvtcGBGcBxezEA+4+kLbY1GekwVIblk/WMIquQLCdxwK9cg==
   dependencies:
     "@firebase/messaging-types" "0.3.0"
     "@firebase/util" "0.2.20"
@@ -705,7 +696,6 @@
 "@firebase/performance@0.2.10":
   version "0.2.10"
   resolved "https://registry.yarnpkg.com/@firebase/performance/-/performance-0.2.10.tgz#9bb7073e68baa929075a115b96c03e14bccd11f7"
-  integrity sha512-LcUuY6rU+dA4jn8mq6zZN8JO50noup+peslS71ZZLQz1UdnpVhKAvUbS/M6TAzDlsn9uJaUyH8Fyt+vuwxdLcQ==
   dependencies:
     "@firebase/installations" "0.1.7"
     "@firebase/logger" "0.1.17"
@@ -728,7 +718,6 @@
 "@firebase/storage@0.3.4":
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/@firebase/storage/-/storage-0.3.4.tgz#4829e225bb06b1b741f55666e535f4d5cb62c6b5"
-  integrity sha512-2NHKgD7Ku5xMFeQqAWKV3WdX/ZC2yRPNBKcdHLvo/Y/DF2qkA1kmY4MWpuosr1pbxklSgqVA/3mueUWTsoakYw==
   dependencies:
     "@firebase/storage-types" "0.3.1"
     tslib "1.9.3"
@@ -736,14 +725,12 @@
 "@firebase/util@0.2.20":
   version "0.2.20"
   resolved "https://registry.yarnpkg.com/@firebase/util/-/util-0.2.20.tgz#0245f8975e4a511eceb9c1bb5b69fc2b4c87d4a9"
-  integrity sha512-Cu5T7RFV54eZdToPXcRKwn7rB0hImbkvLdAmno6mKkoV5s0xDgo9K0PBvftqp8Gg2aDR/B5p+ZjR6xDiSQ42sA==
   dependencies:
     tslib "1.9.3"
 
 "@firebase/webchannel-wrapper@0.2.21":
   version "0.2.21"
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.2.21.tgz#1116075d3d821e058a8c321385552c51fa3a6680"
-  integrity sha512-eL4xPPjTBceYKa27tN3SahSD/7k5ioKFGeZZZX67+aLuxxFts2eTCcotRAeKcjGu1xTz7GnWUkMsj4NZZTIGXg==
 
 "@grpc/proto-loader@^0.5.0":
   version "0.5.1"
@@ -1391,7 +1378,6 @@ balanced-match@^1.0.0:
 base-64@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
-  integrity sha1-eAqZyE59YAJgNhURxId2E78k9rs=
 
 base64-js@^1.1.2, base64-js@^1.2.3:
   version "1.3.0"
@@ -2305,7 +2291,6 @@ fast-levenshtein@~2.0.4:
 faye-websocket@0.11.3:
   version "0.11.3"
   resolved "https://registry.yarnpkg.com/faye-websocket/-/faye-websocket-0.11.3.tgz#5c0e9a8968e8912c286639fde977a8b209f2508e"
-  integrity sha512-D2y4bovYpzziGgbHYtGCMjlJM36vAl/y+xUyn1C+FVx8szd1E+86KwVw6XvYSzOP8iMpm1X0I4xJD+QtUb36OA==
   dependencies:
     websocket-driver ">=0.5.1"
 
@@ -2423,7 +2408,6 @@ find-up@^3.0.0:
 firebase@^6.2.4:
   version "6.2.4"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-6.2.4.tgz#900bae45b056c90245cd9aaeb0e09e2f5de72311"
-  integrity sha512-vDWvqUKmWbTeg2z1Df+bbyPrRUWXXency0eH2CG62wpTmMJXJYKb+9mOlo3MlNOTsKkdrPqKxGHf9LF7ju58lw==
   dependencies:
     "@firebase/app" "0.4.9"
     "@firebase/app-types" "0.4.0"
@@ -2558,7 +2542,6 @@ gauge@~2.7.3:
 geolib@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/geolib/-/geolib-3.0.4.tgz#63fd82cf4311f08cadc142aaa73a0941844266d1"
-  integrity sha512-IpbpPdfuVdjj2T909H0Kj0Crp0he+xfFYX6e1Wlvo5L2OVkfnfvpTLp9k0VYuu5ObbWhQ/TI2VKNsrAokss5vA==
 
 get-caller-file@^1.0.1:
   version "1.0.3"
@@ -2611,7 +2594,6 @@ glob-parent@^3.1.0:
 glob@7.0.6:
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.0.6.tgz#211bafaf49e525b8cd93260d14ab136152b3f57a"
-  integrity sha1-IRuvr0nlJbjNkyYNFKsTYVKz9Xo=
   dependencies:
     fs.realpath "^1.0.0"
     inflight "^1.0.4"
@@ -4964,14 +4946,12 @@ react-lifecycles-compat@^3.0.4:
 react-native-animatable@^1.2.4:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.3.2.tgz#4783ee1a73dc98815aef234ce6b819f80bfe7d80"
-  integrity sha512-rmah3KQ63ft8DxkzFUwJSuZeq+oSYwldoGF4DTOR5WM2WR5wiWLgBAtrAHlI3Di3by323uOR21s+MlqPcHz2Kw==
   dependencies:
     prop-types "^15.5.10"
 
 react-native-button@^2.3.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/react-native-button/-/react-native-button-2.4.0.tgz#42b487073a7ce7c54ab503f77c6ced1ab95742bf"
-  integrity sha512-4siaJlpOLeL9fAhX8VU3cnUfcGLe3E2zABDWSKxkF+NiYOd+AnKeYY29WXlV8hXhCFo+Ry7E+alrJ6zjZLTSfg==
   dependencies:
     prop-types "^15.5.10"
 
@@ -5016,7 +4996,6 @@ react-native-elements@^1.1.0:
 react-native-fetch-blob@^0.10.8:
   version "0.10.8"
   resolved "https://registry.yarnpkg.com/react-native-fetch-blob/-/react-native-fetch-blob-0.10.8.tgz#4fc256abae0cb5f10e7c41f28c11b3ff330d72a9"
-  integrity sha1-T8JWq64MtfEOfEHyjBGz/zMNcqk=
   dependencies:
     base-64 "0.1.0"
     glob "7.0.6"
@@ -5024,7 +5003,6 @@ react-native-fetch-blob@^0.10.8:
 react-native-firebase@5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-5.3.0.tgz#3a5c31fa74c2edf9a1b82a62ae05b80dc976626e"
-  integrity sha512-bU0rDuqWTmaGThRj7dqS+fNZkqW2phq0euEqpQ4MICH40TeWZ3ek00e7yUS2142id/sAyUj184+UBWh3N0Iamg==
   dependencies:
     opencollective-postinstall "^2.0.0"
     prop-types "^15.6.2"
@@ -5032,12 +5010,10 @@ react-native-firebase@5.3.0:
 react-native-geocoder@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/react-native-geocoder/-/react-native-geocoder-0.5.0.tgz#ff4b9c55d5768a4784eefccb411761c82e067579"
-  integrity sha1-/0ucVdV2ikeE7vzLQRdhyC4GdXk=
 
 react-native-gesture-handler@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.3.0.tgz#d0386f565928ccc1849537f03f2e37fd5f6ad43f"
-  integrity sha512-ASRFIXBuKRvqlmwkWJhV8yP2dTpvcqVrLNpd7FKVBFHYWr6SAxjGyO9Ik8w1lAxDhMlRP2IcJ9p9eq5X2WWeLQ==
   dependencies:
     hoist-non-react-statics "^2.3.1"
     invariant "^2.2.2"
@@ -5046,7 +5022,6 @@ react-native-gesture-handler@^1.3.0:
 react-native-get-location@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-native-get-location/-/react-native-get-location-1.2.0.tgz#0773a96029a908d9b9df2f558b252dbe9495674f"
-  integrity sha512-+GB5oLBAfU9Hzux7xiLmMHs0ry3d05nnCrkGfpErKtmqggTn9uYCXAjoGJBgWtBEt9WWj8mcjAiokM5fH2/JDw==
 
 react-native-gifted-chat@^0.9.3:
   version "0.9.6"
@@ -5070,7 +5045,6 @@ react-native-gifted-chat@^0.9.3:
 react-native-image-picker@^0.28.1:
   version "0.28.1"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.28.1.tgz#1127460522e0c9741fc62f3d040271d298fb6a6e"
-  integrity sha512-CW2dm+cjsdW2fjBW2WD/cSufNG0x0UpljwGHrjSzyB0TckoW+tjYv44UWtckCWxr1JtCg+QrYDO/MzlRyFcjwQ==
 
 react-native-iphone-x-helper@^1.0.3:
   version "1.2.0"
@@ -5175,7 +5149,6 @@ react-native-safe-area-view@^0.14.1:
 react-native-star-rating@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-native-star-rating/-/react-native-star-rating-1.1.0.tgz#57fcd023c63e947427c4dbbd1c8f4cc49e5c48ce"
-  integrity sha512-ocOYx+BKUvfruvXm45MBbQZtpkVO3PQieBDepB0FaLuxE3vUtDTPzHqXuBes3iCM5oRi5umrnmMUMsM0mEq5ZA==
   dependencies:
     prop-types "^15.5.10"
     react-native-animatable "^1.2.4"
@@ -5209,7 +5182,6 @@ react-native-vector-icons@6.1.0:
 react-native-vector-icons@^4.5.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.6.0.tgz#e4014311ffa6de397d914ffc31b7097a874cc8d5"
-  integrity sha512-rpfhfPiXCK2PX1nrNhdxSMrEGB/Gw/SvKoPM0G2wAkSoqynnes19K0VYI+Up7DqR1rFIpE4hP2erpT1tNx2tfg==
   dependencies:
     lodash "^4.0.0"
     prop-types "^15.5.10"
@@ -5234,7 +5206,6 @@ react-native-video@4.4.1:
 react-native@0.59.9:
   version "0.59.9"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.59.9.tgz#c94ee4fa35121720c05235a2dd6cdd2784bf5177"
-  integrity sha512-/+8EgIZwFpYHyyJ7Zav7B6LHNrytwUQ+EKGT/QV7HSrgpf2Y5NZNeUYUHKiVKLYpBip1G32/LcAECQj37YRwGQ==
   dependencies:
     "@babel/runtime" "^7.0.0"
     "@react-native-community/cli" "^1.2.1"
@@ -5326,7 +5297,6 @@ react-navigation-tabs@~1.1.4:
 react-navigation@^3.11.0:
   version "3.11.0"
   resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-3.11.0.tgz#2c82217c452d07d8b9b0929bc7e77e2bcfaf9388"
-  integrity sha512-wlPcDtNiIdPeYxNQ/MN4arY5Xe9EphD2QVpRuvvuPWW+BamF3AJaIy060r3Yz59DODAoWllscabat/yqnih8Tg==
   dependencies:
     "@react-navigation/core" "~3.4.1"
     "@react-navigation/native" "~3.5.0"

@@ -28,6 +28,7 @@ import ItemDetails from '../components/itemDetails/ItemDetails'
 import RequestRental from '../components/requestRental/RequestRental'
 import SellerProfile from '../components/user/SellerProfile'
 import Scan from '../components/Scanner/Scan'
+import QrScannerScreen from '../components/Scanner/QrScannerScreen';
 import Filter from '../components/filter/Filter'
 import MyTools from '../components/myTools/MyTools'
 import SignOutComponent from '../components/login/SignOutComponent';
@@ -174,6 +175,7 @@ const AppDrawerNavigator = createDrawerNavigator({
   Home: HomeTabNavigator,
   Profile: UserInfoStack,
   ScanCode: Scan,
+  QrScannerScreen: QrScannerScreen,
   Logout: {
     screen: SignOutComponent,
     navigationOptions: {

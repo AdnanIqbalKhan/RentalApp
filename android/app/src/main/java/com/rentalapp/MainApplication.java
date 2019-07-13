@@ -3,6 +3,7 @@ package com.rentalapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import org.reactnative.camera.RNCameraPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.devfd.RNGeocoder.RNGeocoderPackage;
 import com.github.douglasjunior.reactNativeGetLocation.ReactNativeGetLocationPackage;
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNCameraPackage(),
             new RNFirebasePackage(),
             new RNGeocoderPackage(),
             new ReactNativeGetLocationPackage(),

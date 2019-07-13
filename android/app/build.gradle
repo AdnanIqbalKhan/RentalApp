@@ -107,6 +107,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        missingDimensionStrategy 'react-native-camera', 'mlkit'
+    }
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
     }
     signingConfigs {
         release {
@@ -149,6 +153,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-camera')
     implementation project(':react-native-firebase')
     implementation project(':react-native-geocoder')
     implementation project(':react-native-get-location')
@@ -159,7 +164,7 @@ dependencies {
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "com.google.android.gms:play-services-base:16.1.0"
     implementation "com.google.firebase:firebase-core:16.0.8"

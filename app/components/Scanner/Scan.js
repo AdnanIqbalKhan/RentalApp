@@ -4,11 +4,13 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image, ScrollView,TouchableOpacity,ImageBackground} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Header, Left, Right, Icon, Button, Title, Body} from 'native-base';
+import QRCodeScanner from 'react-native-qrcode-scanner';
+
 
 export default class Scan extends Component{
     static navigationOptions = {
         header: null,
-       
+
       }
   render() {
     return (
@@ -24,9 +26,9 @@ export default class Scan extends Component{
             <Title style = {{fontSize:20}}>Start Rental</Title>
           </Body>
           <Right style={{flex:1}}>
-           
-           
-          </Right>    
+
+
+          </Right>
         </Header>
         <View>
         <View style={styles.boxSummary}>
@@ -73,13 +75,13 @@ export default class Scan extends Component{
                   </View>
                 </View>
         </View>
-      
+
         </View>
         <View style={styles.scan}></View>
-        <TouchableOpacity style={styles.btn} >
+        <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('QrScannerScreen')}>
               <Text style={styles.textcolor}>* Scan QR Code</Text>
             </TouchableOpacity>
-       
+
       </View>
     );
   }
@@ -109,7 +111,7 @@ const styles = StyleSheet.create({
   btn: {
     alignSelf: 'center',
     alignItems: 'center',
-    
+
     backgroundColor: '#1b96fe',
     justifyContent: 'center',
     marginTop: 10,
@@ -122,8 +124,8 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 18,
     textAlign:'center',
-    
-    
+
+
   },
   boxSummary: {
     backgroundColor: 'white',
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginBottom:10,
     flexDirection: 'row'
-    
+
 
 },
 });
