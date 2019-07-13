@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {
   connectFirebase,
-  getDocByObjectKey
+  getData
 } from "../../backend/firebase/utility";
 import GlobalConst from '../../config/GlobalConst';
 import { _retrieveData } from '../../backend/AsyncFuncs'
@@ -33,7 +33,7 @@ export default class MyTools extends Component {
     connectFirebase()
     _retrieveData(GlobalConst.STORAGE_KEYS.userId)
       .then(a => {
-        getDocByObjectKey('posts', 'userID', a)
+        getData('posts', 'userID', a)
           .then(a => {
             this.setState({ data: a, loading: false })
           }).catch(e => {
