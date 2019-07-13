@@ -175,7 +175,6 @@ class CustomDrawerComponent extends Component {
       .then(a => {
         getData('users', a)
           .then(user => {
-            console.log(user)
             this.setState({ user })
           }).catch(e => {
             console.log(e)
@@ -186,7 +185,6 @@ class CustomDrawerComponent extends Component {
       })
   }
   render() {
-    console.log(this.state.user)
     var user = this.state.user
     return (
       <SafeAreaView style={{ flex: 1 }}>

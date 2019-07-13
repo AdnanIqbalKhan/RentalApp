@@ -1,10 +1,23 @@
 
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, ScrollView, Image, TouchableHighlight, Switch, TouchableOpacity, ActivityIndicator } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TouchableHighlight,
+  Switch,
+  TouchableOpacity,
+  ActivityIndicator
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Calendar } from 'react-native-calendars';
+// import { Calendar } from 'react-native-calendars';
+import Moment from 'moment';
 import Geocoder from 'react-native-geocoder';
+import CalendarPicker from 'react-native-calendar-picker';
 
 import {
   connectFirebase,
@@ -26,6 +39,8 @@ export default class ItemDetails extends Component {
 
 
   state = {
+    selectedStartDate: null,
+    selectedEndDate: null,
     itemData: null,
     itemUser: null
   }
@@ -36,6 +51,7 @@ export default class ItemDetails extends Component {
     const { navigation } = this.props;
     this.itemId = navigation.getParam('id', 'NO-ID');
     const item = navigation.getParam('item', 'NO-ITEM');
+    this.onDateChange = this.onDateChange.bind(this);
 
     connectFirebase()
     getData('users', item.userID).then(user => {
@@ -57,9 +73,37 @@ export default class ItemDetails extends Component {
     }).catch(e => console.log(e))
   }
 
+  onDateChange(date, type) {
+    console.log(date, type)
+    if (type === 'END_DATE') {
+      this.setState({
+        selectedEndDate: date,
+      });
+    } else {
+      this.setState({
+        selectedStartDate: date,
+        selectedEndDate: null,
+      });
+    }
+  }
+
+  formatDate(date) {
+    Moment.locale('en');
+    var dt = new Date(date);
+    return Moment(dt).format('ddd MMM DD, YYYY')
+  }
+
   render() {
     var item = this.state.itemData;
     var user = this.state.itemUser;
+
+    const { selectedStartDate, selectedEndDate } = this.state;
+    const minDate = new Date(); // Today
+    const maxDate = null
+    const startDate = selectedStartDate ? selectedStartDate.toString() : '';
+    const endDate = selectedEndDate ? selectedEndDate.toString() : '';
+
+
     return (
       <View style={styles.container}>
         {item ?
@@ -91,7 +135,7 @@ export default class ItemDetails extends Component {
                 </View>
                 <View>
                   <TouchableOpacity style={styles.btnrent} onPress={() => this.props.navigation.navigate('RequestRental',
-                  { item_id: this.itemId, item: this.state.itemData, post_user: this.state.itemUser })}>
+                    { item_id: this.itemId, item: this.state.itemData, post_user: this.state.itemUser })}>
                     <Text style={styles.textcolorrent}>Rent now</Text>
                   </TouchableOpacity>
                 </View>
@@ -200,42 +244,15 @@ export default class ItemDetails extends Component {
               </Text>
             </View>
             <View style={{ marginTop: 5 }}>
-
-              <Calendar
-                // Specify style for calendar container element. Default = {}
-                style={{
-                  height: 350,
-                  width: '96%',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.8,
-                  shadowRadius: 1,
-                  elevation: 5,
-                  alignSelf: 'center'
-                }}
-                // Specify theme properties to override specific styles for calendar parts. Default = {}
-                theme={{
-                  backgroundColor: '#ffffff',
-                  calendarBackground: '#ffffff',
-                  textSectionTitleColor: '#b6c1cd',
-                  selectedDayBackgroundColor: '#00adf5',
-                  selectedDayTextColor: '#ffffff',
-                  todayTextColor: '#00adf5',
-                  dayTextColor: '#2d4150',
-                  textDisabledColor: '#d9e1e8',
-                  dotColor: '#00adf5',
-                  selectedDotColor: '#ffffff',
-                  arrowColor: 'orange',
-                  monthTextColor: 'black',
-                  indicatorColor: 'blue',
-
-                  textDayFontWeight: '300',
-                  textMonthFontWeight: 'bold',
-                  textDayHeaderFontWeight: '300',
-                  textDayFontSize: 16,
-                  textMonthFontSize: 16,
-                  textDayHeaderFontSize: 16
-                }}
+              <CalendarPicker
+                startFromMonday={true}
+                allowRangeSelection={true}
+                minDate={minDate}
+                maxDate={maxDate}
+                todayBackgroundColor="#f2e6ff"
+                selectedDayColor="#7300e6"
+                selectedDayTextColor="#FFFFFF"
+                onDateChange={this.onDateChange}
               />
             </View>
             <View>
@@ -245,7 +262,7 @@ export default class ItemDetails extends Component {
                     <Text style={{ color: 'black', fontSize: 15, marginLeft: 10, fontWeight: 'bold' }}>Start Date:</Text>
                   </View>
                   <View>
-                    <Text style={{ marginLeft: 43, color: 'black', fontSize: 13 }}>May 24, 2019</Text>
+                    <Text style={{ marginLeft: 43, color: 'black', fontSize: 13 }}>{this.formatDate(startDate)}</Text>
                   </View>
 
                 </View>
@@ -266,7 +283,7 @@ export default class ItemDetails extends Component {
                     <Text style={{ color: 'black', fontSize: 15, marginLeft: 10, fontWeight: 'bold' }}>End Date:</Text>
                   </View>
                   <View>
-                    <Text style={{ marginLeft: 52, color: 'black', fontSize: 13 }}>May 25, 2019</Text>
+                    <Text style={{ marginLeft: 52, color: 'black', fontSize: 13 }}>{this.formatDate(endDate)}</Text>
                   </View>
 
                 </View>
