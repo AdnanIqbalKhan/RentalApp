@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import { ListItem, SearchBar } from 'react-native-elements';
-import {Header, Left, Right, Icon,Button,Title,Body} from 'native-base';
+import { Header, Left, Right, Icon, Button, Title, Body } from 'native-base';
+import Moment from 'react-moment';
+import {
+  connectFirebase,
+  getDocByObjectKey
+} from "../../backend/firebase/utility";
+import GlobalConst from '../../config/GlobalConst';
+import { _retrieveData } from '../../backend/AsyncFuncs'
 
 export default class Notification extends Component {
   static navigationOptions = {
@@ -24,25 +31,23 @@ export default class Notification extends Component {
   }
 
   makeRemoteRequest = () => {
-    const url = `https://randomuser.me/api/?&results=20`;
-    this.setState({ loading: true });
-
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: res.results,
-          error: res.error || null,
-          loading: false,
-        });
-        this.arrayholder = res.results;
+    this.setState({ loading: true })
+    connectFirebase()
+    _retrieveData(GlobalConst.STORAGE_KEYS.userId)
+      .then(userId => {
+        getDocByObjectKey('requests', 'postOnwerId', userId)
+          .then(a => {
+            this.setState({ data: a, loading: false })
+          }).catch(e => {
+            console.log(e)
+            this.setState({ error: e, loading: false })
+          })
       })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
+      .catch(e => {
+        console.log(e)
+        this.setState({ error: e, loading: false })
+      })
   };
-
-
 
   renderSeparator = () => {
     return (
@@ -51,59 +56,67 @@ export default class Notification extends Component {
           height: 1,
           width: '100%',
           backgroundColor: 'grey',
-          
         }}
       />
     );
   };
 
+  keyExtractor = (item, index) => index.toString()
+
+  renderItem = ({ item }) => {
+    console.log(item)
+    return (
+      <ListItem
+        leftAvatar={{ source: { uri: item.itemImage } }}
+        title={<View><Text>New Booking Request</Text></View>}
+        subtitle={
+          <View style={styles.subtitleView}>
+            <Text>A new booking request for {item.postTitle}  from {item.requesterName} requires your review</Text>
+            <Moment interval={0} fromNow element={Text}>
+              {new Date(item.time.toDate())}
+            </Moment>
+          </View>
+        }
+      />
+    )
+  }
+
   render() {
+    console.log(this.state.data)
     if (this.state.loading) {
       return (
-        
         <View style={{ flex: 1 }}>
-        <View style={{  alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator />
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator />
           </View>
         </View>
       );
     }
     return (
       <View >
-      
-       
-        <FlatList
-          data={this.state.data}
-          renderItem={({ item }) => (
-            <ListItem
-            leftAvatar={{ source: { uri: item.picture.thumbnail } }}
-              title = {<View><Text>New Booking Request
-                </Text></View>}
-              subtitle={
-                  <View style={styles.subtitleView}>
-                      <Text>A new booking request requires your Review</Text>
-                      <Text>10 mins ago</Text>
-                  </View>
-              }
-            />
-          )}
-          ItemSeparatorComponent={this.renderSeparator}
-          
-        />
+        {(this.state.data.length == 0) ?
+          <Text>No notification found</Text>
+          :
+          <FlatList
+            data={this.state.data}
+            keyExtractor={this.keyExtractor}
+            renderItem={this.renderItem}
+            ItemSeparatorComponent={this.renderSeparator}
+          />
+        }
       </View>
     );
   }
 }
 
 styles = StyleSheet.create({
-    subtitleView: {
-      
-    },
-    
-    menu:{
-      alignItems:'flex-start',
-      justifyContent:'flex-start',
-      marginTop:'5%',
-      marginLeft:'3%',
-      position:'absolute'}
-  })
+  subtitleView: {
+  },
+  menu: {
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginTop: '5%',
+    marginLeft: '3%',
+    position: 'absolute'
+  }
+})
