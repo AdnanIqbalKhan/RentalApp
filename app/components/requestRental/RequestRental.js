@@ -58,6 +58,8 @@ export default class RequestRental extends Component {
                             requesterName: user.firstName + ' ' + user.lastName,
                             requesterId: user.UserId,
                             postTitle: item.title,
+                            itemImage: item.imageUrl,
+                            time: new Date(),
                             postId: itemId
                         },
                         item: item

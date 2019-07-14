@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   createBottomTabNavigator,
   createSwitchNavigator,
@@ -11,6 +11,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Platform, StyleSheet, Text, View, ScrollView, Image, SafeAreaView, TouchableOpacity, ImageBackground } from 'react-native';
+import {
+  connectFirebase,
+  getData
+} from "../backend/firebase/utility";
+import GlobalConst from '../config/GlobalConst';
+import { _retrieveData } from '../backend/AsyncFuncs'
 
 import Login from '../components/login/Login';
 import Signup from '../components/login/Signup';
@@ -150,25 +156,56 @@ const HomeTabNavigator = createMaterialBottomTabNavigator({
 
   });
 
-const CustomDrawerComponent = (props) => (
-  <SafeAreaView style={{ flex: 1 }}>
-    <View style={{ height: 150, backgroundColor: '#2a84c5' }}>
-      <ImageBackground style={styles.container} source={require('../assets/drawerCov.png')}>
-        <Image source={require('../assets/avatar.png')} style={styles.avatar} />
-        <Text style={styles.avatarName}>John</Text>
-        <Text style={styles.avatarRating}>4.5<Ionicons name={'ios-star'} size={12}
-          color={'#ffffff'} /></Text>
-      </ImageBackground>
-    </View>
-    <ScrollView>
-      <DrawerItems {...props} />
-    </ScrollView>
-    <View>
-    </View>
-  </SafeAreaView>
+class CustomDrawerComponent extends Component {
 
-)
-
+  state = {
+    user: {
+      firstName: "User",
+      lastName: "Name",
+      rating: {
+        star: 4.5
+      }
+    }
+  }
+  constructor(props) {
+    super(props)
+    connectFirebase()
+    _retrieveData(GlobalConst.STORAGE_KEYS.userId)
+      .then(a => {
+        getData('users', a)
+          .then(user => {
+            this.setState({ user })
+          }).catch(e => {
+            console.log(e)
+          })
+      })
+      .catch(e => {
+        console.log(e)
+      })
+  }
+  render() {
+    var user = this.state.user
+    return (
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ height: 150, backgroundColor: '#2a84c5' }}>
+          <ImageBackground style={styles.container} source={require('../assets/drawerCov.png')}>
+            <Image source={require('../assets/avatar.png')} style={styles.avatar} />
+            <Text style={styles.avatarName}>{user.firstName + ' ' + user.lastName}</Text>
+            <Text style={styles.avatarRating}>
+              {(user.rating.star == -1) ? "No Reviews" : user.rating.star}
+              {user.rating.star != -1 && <Ionicons name={'ios-star'} size={12} color={'#ffffff'} />}
+            </Text>
+          </ImageBackground>
+        </View>
+        <ScrollView>
+          <DrawerItems {...this.props} />
+        </ScrollView>
+        <View>
+        </View>
+      </SafeAreaView>
+    )
+  }
+}
 const AppDrawerNavigator = createDrawerNavigator({
   //DownNav:DownNav,
   Home: HomeTabNavigator,
