@@ -50,17 +50,17 @@ export default class Profile extends Component {
     await this.setState({
       currentUserId: currentUserId,
       loader: false,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      companyName: userData.companyName,
-      date: userData.dateJoined.substring(0,15),
-      location: userData.location,
-      pushNotifications: userData.pushNotifications,
-      emailNotifications: userData.emailNotifications,
-      textNotifications: userData.textNotifications,
-      paypalAccount: userData.paypalAccount,
-      squareAccount: userData.squareAccount,
-      paymentMethod: userData.paymentMethod,
+      firstName: userData['firstName'] ? userData.firstName : '',
+      lastName: userData['lastName'] ? userData.lastName : '',
+      companyName: userData['companyName'] ? userData.companyName : '',
+      date: userData['dateJoined'] ? userData.dateJoined.substring(0,15) : 'joining date will appear here',
+      location: userData['location'] ? userData.location : '',
+      pushNotifications: userData['pushNotifications'] ? userData.pushNotifications : false,
+      emailNotifications: userData['emailNotifications'] ? userData.emailNotifications : false,
+      textNotifications: userData['textNotifications'] ? userData.textNotifications : false,
+      paypalAccount: userData['paypalAccount'] ? userData.paypalAccount : '',
+      squareAccount: userData['squareAccount'] ? userData.squareAccount : '',
+      paymentMethod: userData['paymentMethod'] ? userData.paymentMethod : '',
      });
   }
 
@@ -123,7 +123,7 @@ export default class Profile extends Component {
               </View>
               <View style={{ marginTop: 3 }}>
                 <Text style={{ justifyContent: 'center', textAlign: 'center', color: 'black' }}>
-                  {this.state.firstName}
+                  Name: {this.state.firstName}
           </Text>
               </View>
               <View style={{ flexDirection: 'row', textAlign: 'center', justifyContent: 'center' }}>
@@ -139,7 +139,7 @@ export default class Profile extends Component {
               </View>
               <View>
                 <Text style={{ justifyContent: 'center', textAlign: 'center', color: 'black' }}>
-                  Location : Charlotte, NC
+                  Location : {this.state.location}
           </Text>
               </View>
             </View>
@@ -149,19 +149,22 @@ export default class Profile extends Component {
                     </Text>
             </View>
             <View style={styles.center}>
-              <TextInput placeholder={this.state.firstName == undefined ? 'First Name' : this.state.firstName} keyboardAppearance='default' autoCapitalize='none'
+              <TextInput placeholder={'first name'} keyboardAppearance='default' autoCapitalize='none'
                 returnKeyType='next' style={styles.textbox1} autoCorrect={false}
                 onChangeText={(firstName) => this.setState({firstName})}
+                value={this.state.firstName}
               />
 
-              <TextInput placeholder={this.state.lastName == undefined ? 'Last Name' : this.state.lastName} keyboardAppearance='default' autoCapitalize='none'
+              <TextInput placeholder={'last name'} keyboardAppearance='default' autoCapitalize='none'
                 returnKeyType='next' style={styles.textbox} autoCorrect={false}
                 onChangeText={(lastName) => this.setState({lastName})}
+                value={this.state.lastName}
               />
 
-              <TextInput placeholder={this.state.companyName == undefined ? 'Company Name(Optional)' : this.state.companyName} keyboardAppearance='default' autoCapitalize='none'
+              <TextInput placeholder={'Company Name(Optional)'} keyboardAppearance='default' autoCapitalize='none'
                 returnKeyType='next' style={styles.textbox} autoCorrect={false}
                 onChangeText={(companyName) => this.setState({companyName})}
+                value={this.state.companyName}
               />
 
 
@@ -258,7 +261,7 @@ export default class Profile extends Component {
                     <Text style={{ color: 'black', fontSize: 15, marginLeft: 10, marginTop: 4, }}>PayPal Account:</Text>
                   </View>
                   <View>
-                  <TextInput placeholder={this.state.paypalAccount == undefined ? 'Paypal Account' : this.state.paypalAccount} keyboardAppearance='default' autoCapitalize='none'
+                  <TextInput placeholder={'PayPal account'} keyboardAppearance='default' autoCapitalize='none'
                     returnKeyType='next' style={styles.textbox3} autoCorrect={false}
                     onChangeText={(paypalAccount) => this.setState({paypalAccount})}
                   />
@@ -271,7 +274,7 @@ export default class Profile extends Component {
                     <Text style={{ color: 'black', fontSize: 15, marginLeft: 10, marginTop: 4, }}>Square Account:</Text>
                   </View>
                   <View>
-                  <TextInput placeholder={this.state.squareAccount == undefined ? 'Square Account' : this.state.squareAccount} keyboardAppearance='default' autoCapitalize='none'
+                  <TextInput placeholder={'Square Account'} keyboardAppearance='default' autoCapitalize='none'
                     returnKeyType='next' style={styles.textbox2} autoCorrect={false}
                     onChangeText={(squareAccount) => this.setState({squareAccount})}
                   />

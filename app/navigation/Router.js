@@ -39,6 +39,8 @@ import Filter from '../components/filter/Filter'
 import MyTools from '../components/myTools/MyTools'
 import SignOutComponent from '../components/login/SignOutComponent';
 
+import NullComponent from "../components/others/NullComponent";
+
 
 const AuthStack = createStackNavigator({
   Login: Login,
@@ -191,10 +193,10 @@ class CustomDrawerComponent extends Component {
         <View style={{ height: 150, backgroundColor: '#2a84c5' }}>
           <ImageBackground style={styles.container} source={require('../assets/drawerCov.png')}>
             <Image source={require('../assets/avatar.png')} style={styles.avatar} />
-            <Text style={styles.avatarName}>{user.firstName + ' ' + user.lastName}</Text>
+            <Text style={styles.avatarName}>{user['firstName'] ? user.firstName + ' ' + user.lastName : 'Name not set yet'}</Text>
             <Text style={styles.avatarRating}>
-              {(user.rating.star == -1) ? "No Reviews" : user.rating.star}
-              {user.rating.star != -1 && <Ionicons name={'ios-star'} size={12} color={'#ffffff'} />}
+              {user['rating'] ? (user.rating.star == -1 ? "No Reviews" : user.rating.star) : null}
+              {user['rating'] ? (user.rating.star != -1 && <Ionicons name={'ios-star'} size={12} color={'#ffffff'} />) : null}
             </Text>
           </ImageBackground>
         </View>
@@ -211,8 +213,18 @@ const AppDrawerNavigator = createDrawerNavigator({
   //DownNav:DownNav,
   Home: HomeTabNavigator,
   Profile: UserInfoStack,
-  ScanCode: Scan,
-  QrScannerScreen: QrScannerScreen,
+  ScanCode: {
+    screen: Scan,
+    navigationOptions: {
+      drawerLabel: 'Scan Code'
+    }
+  },
+  QrScannerScreen: {
+    screen: QrScannerScreen,
+    navigationOptions: {
+      drawerLabel: <NullComponent />
+    }
+  },
   Logout: {
     screen: SignOutComponent,
     navigationOptions: {

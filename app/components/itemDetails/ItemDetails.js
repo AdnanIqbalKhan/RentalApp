@@ -198,7 +198,7 @@ export default class ItemDetails extends Component {
 
                           {item.rating.star != -1 && <Ionicons name={'ios-star'} size={16} color={'#ffcc00'} />}
                         </Text>
-                        <Text>{(user.rating.star == -1) ? "" : "(" + user.rating.count + ")"}</Text>
+                        <Text>{user['rating'] ? ( user.rating.star == -1 ? "" : "(" + user.rating.count + ")" ) : null}</Text>
                       </View>
 
                     </View>
