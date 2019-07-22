@@ -87,9 +87,11 @@ export default class SignUpScreen extends Component {
 const styles = StyleSheet.create({
   containerView: {
     flex: 1,
+    // backgroundColor: '#29b1eb',
+    backgroundColor: '#68bee3',
   },
   loginScreenContainer: {
-    flex: 1,
+    flex: 1, 
   },
   logoText: {
     fontSize: 40,

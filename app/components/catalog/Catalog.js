@@ -277,7 +277,7 @@ class Catalog extends Component {
 
     connectFirebase();
     _retrieveData(GlobalConst.STORAGE_KEYS.userId).then((userID) => {
-      getDocByNotObjectKey('posts', 'userID',userID)
+      getDocByNotObjectKey('posts', 'userID', userID)
         .then(r => {
           this.setState({
             catalogData: r,
@@ -380,7 +380,7 @@ class Catalog extends Component {
               </Button>
             </Left>
             <Body style={{ flex: 1, marginLeft: 40 }}>
-              <Title style={{ fontSize: 20 }}>Catalog</Title>
+              <Title style={{ fontSize: 20, textAlign: 'center' }}>Catalog</Title>
             </Body>
             <Right style={{ flexDirection: 'row' }}>
               <Button transparent >
