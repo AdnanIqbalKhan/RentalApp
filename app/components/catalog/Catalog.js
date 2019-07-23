@@ -473,37 +473,41 @@ class Catalog extends Component {
                     data={catalogData}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
-                      <View style={{ flexDirection: 'row', height: 105, backgroundColor: 'white' }}>
-                        <View>
-                          <Image source={{ uri: item.imageUrl }} style={{ width: 100, height: 100 }} />
-                        </View>
-                        <View style={{ marginLeft: 8 }}>
-                          <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 2 }}>{item.title}</Text>
+                      <TouchableHighlight key={item.id} onPress={() => this.props.navigation.navigate('DetailTabs', {
+                        id: item.id, item: item
+                      })}>
+                        <View style={{ flexDirection: 'row', height: 105, backgroundColor: 'white' }}>
+                          <View>
+                            <Image source={{ uri: item.imageUrl }} style={{ width: 100, height: 100 }} />
                           </View>
-                          <Text style={styles.avatarRating}>
-                            {
-                              (item.rating.star == -1) ?
-                                "No Reviews"
-                                :
-                                item.rating.star
-                            }
-                            {item.rating.star != -1 && <Ionicons name={'ios-star'} size={16} color={'#ffcc00'} />}
-                          </Text>
-                          <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 18 }}>Deposit: $40</Text>
-                            <Text style={{ fontSize: 18, marginLeft: '5%' }}>Delivery:
-                            {item.deliveryPickupOption != "Pickup"
-                                ? "$" + item.deliveryFee
-                                : "Not Available"
+                          <View style={{ marginLeft: 8 }}>
+                            <View style={{ flexDirection: 'row' }}>
+                              <Text style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 2 }}>{item.title}</Text>
+                            </View>
+                            <Text style={styles.avatarRating}>
+                              {
+                                (item.rating.star == -1) ?
+                                  "No Reviews"
+                                  :
+                                  item.rating.star
                               }
+                              {item.rating.star != -1 && <Ionicons name={'ios-star'} size={16} color={'#ffcc00'} />}
                             </Text>
-                          </View>
-                          <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                            <Text style={{ fontSize: 16, color: '#1b96fe' }}>Status: {item.status}</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                              <Text style={{ fontSize: 18 }}>Deposit: $40</Text>
+                              <Text style={{ fontSize: 18, marginLeft: '5%' }}>Delivery:
+                            {item.deliveryPickupOption != "Pickup"
+                                  ? "$" + item.deliveryFee
+                                  : "Not Available"
+                                }
+                              </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                              <Text style={{ fontSize: 16, color: '#1b96fe' }}>Status: {item.status}</Text>
+                            </View>
                           </View>
                         </View>
-                      </View>
+                      </TouchableHighlight>
                     )}
                     ItemSeparatorComponent={this.renderSeparator}
                   />
@@ -511,7 +515,6 @@ class Catalog extends Component {
               </View>
             </ScrollView>
             : <Text>Error occured</Text>
-
         }
       </View>
     );
