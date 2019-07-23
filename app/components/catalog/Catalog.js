@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     justifyContent: 'flex-end',
     borderRadius: 5,
-    padding: 6,
+    padding: 3,
     height: 100,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -238,12 +238,16 @@ const styles = StyleSheet.create({
   },
   itemCode: {
     fontSize: 16,
-    color: '#000000',
+    color: 'white',
+    textAlign: "right",
+    paddingRight: 3
   },
   priceTag: {
     backgroundColor: 'grey',
+    color: 'white',
     opacity: 0.8,
-    marginLeft: '25%',
+    marginLeft: '50%',
+    marginTop: '10%',
     borderTopLeftRadius: 15,
     borderBottomLeftRadius: 15
   },
@@ -257,6 +261,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 50,
     zIndex: 10,
+  },
+  logo: {
+    // padding: 10
+    // alignSelf: 'center',
+    width: Dimensions.get('window').width / 2.5,
   }
 });
 
@@ -379,8 +388,8 @@ class Catalog extends Component {
                 <Icon name="chatboxes" color='white' />
               </Button>
             </Left>
-            <Body style={{ flex: 1, marginLeft: 40 }}>
-              <Title style={{ fontSize: 20, textAlign: 'center' }}>Catalog</Title>
+            <Body style={{ flex: 1, marginLeft: 40, alignItems: 'center', padding: 10 }}>
+              <Image style={styles.logo} resizeMode="contain" source={require('../../assets/Logo.png')} />
             </Body>
             <Right style={{ flexDirection: 'row' }}>
               <Button transparent >
@@ -445,10 +454,11 @@ class Catalog extends Component {
                     itemDimension={100}
                     items={catalogData}
                     style={styles.gridView}
+                    spacing={5}
                     renderItem={({ item, index }) => (
                       <TouchableHighlight key={item.id} onPress={() => this.props.navigation.navigate('DetailTabs', { id: item.id, item: item })}>
                         <View style={[styles.itemContainer]}>
-                          <ImageBackground source={{ uri: item.imageUrl }} style={{ height: '100%' }} resizeMode='contain'>
+                          <ImageBackground source={{ uri: item.imageUrl }} style={{ height: '100%', width: '100%' }} >
                             <View style={styles.priceTag}>
                               <Text style={styles.itemCode}>${item.dailyRate}</Text>
                             </View>
