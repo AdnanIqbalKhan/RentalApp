@@ -96,7 +96,12 @@ const ItemDetailStack = createStackNavigator({
   Catalog: Catalog,
   Filter: Filter,
   Notification: Notification,
-  DetailTabs: ItemDetailTabNavigator,
+  DetailTabs: {
+    screen: ItemDetailTabNavigator,
+    navigationOptions: {
+      header: null,
+    }
+  },
   SellerProfile: SellerProfile,
   RequestRental: RequestRental,
 }

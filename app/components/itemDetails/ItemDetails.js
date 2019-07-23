@@ -9,6 +9,7 @@ import {
   Image,
   TouchableHighlight,
   Switch,
+  ImageBackground,
   TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
@@ -26,15 +27,6 @@ import {
 
 
 export default class ItemDetails extends Component {
-  static navigationOptions = {
-    title: 'Request Rental',
-    headerTintColor: 'white',
-    headerStyle: {
-      textAlign: 'center',
-      backgroundColor: '#1b96fe',
-    },
-    headerTitleStyle: { textAlign: 'center', alignSelf: 'center', color: 'white' },
-  };
   itemId = ""
 
 
@@ -109,15 +101,22 @@ export default class ItemDetails extends Component {
         {item ?
           <ScrollView>
             <View style={{ backgroundColor: 'white', width: '100%', height: 150 }}>
-              <Image source={{ uri: item.imageUrl }} style={{ width: 150, height: 150, alignSelf: "center" }} />
+              <ImageBackground source={{ uri: item.imageUrl }} style={{ height: '100%', width: '100%' }}>
+                <Icon name={'chevron-circle-left'} size={50} color={'black'}
+                  style={{ marginLeft: '2%', marginTop: '5%' }}
+                  onPress={() => this.props.navigation.navigate('Catalog')} />
+                <View style={styles.priceTag}>
+                  <Text style={styles.itemCode}>${item.dailyRate}</Text>
+                </View>
+              </ImageBackground>
             </View>
             <View style={{ flexDirection: 'row', backgroundColor: 'white' }}>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                <Image source={{ uri: item.imageUrl }} style={{ width: 70, height: 50, marginLeft: 10 }} />
-                <Image source={{ uri: item.imageUrl }} style={{ width: 70, height: 50, marginLeft: 20 }} />
-                <Image source={{ uri: item.imageUrl }} style={{ width: 70, height: 50, marginLeft: 20 }} />
-                <Image source={{ uri: item.imageUrl }} style={{ width: 70, height: 50, marginLeft: 20 }} />
-                <Image source={{ uri: item.imageUrl }} style={{ width: 70, height: 50, marginLeft: 20 }} />
+                <Image source={{ uri: item.imageUrl }} style={{ width: 70, height: 50, marginLeft: 10 }} resizeMode='contain' />
+                <Image source={{ uri: item.imageUrl }} style={{ width: 70, height: 50, marginLeft: 20 }} resizeMode='contain' />
+                <Image source={{ uri: item.imageUrl }} style={{ width: 70, height: 50, marginLeft: 20 }} resizeMode='contain' />
+                <Image source={{ uri: item.imageUrl }} style={{ width: 70, height: 50, marginLeft: 20 }} resizeMode='contain' />
+                <Image source={{ uri: item.imageUrl }} style={{ width: 70, height: 50, marginLeft: 20 }} resizeMode='contain' />
               </ScrollView>
 
             </View>
@@ -198,7 +197,7 @@ export default class ItemDetails extends Component {
 
                           {item.rating.star != -1 && <Ionicons name={'ios-star'} size={16} color={'#ffcc00'} />}
                         </Text>
-                        <Text>{user['rating'] ? ( user.rating.star == -1 ? "" : "(" + user.rating.count + ")" ) : null}</Text>
+                        <Text>{user['rating'] ? (user.rating.star == -1 ? "" : "(" + user.rating.count + ")") : null}</Text>
                       </View>
 
                     </View>
@@ -493,4 +492,19 @@ const styles = StyleSheet.create({
     borderColor: '#1b96fe',
     borderRadius: 5
   },
+  itemCode: {
+    fontSize: 20,
+    color: 'white',
+    textAlign: "right",
+    paddingRight: 10
+  },
+  priceTag: {
+    backgroundColor: 'grey',
+    color: 'white',
+    opacity: 0.8,
+    marginLeft: '75%',
+    marginTop: '-10%',
+    borderTopLeftRadius: 15,
+    borderBottomLeftRadius: 15
+  }
 });
