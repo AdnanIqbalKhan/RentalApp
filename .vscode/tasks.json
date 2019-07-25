@@ -41,6 +41,13 @@
             "problemMatcher": []
         },
         {
+            "label": "Generate Android Keystore",
+            "group": "build",
+            "type": "shell",
+            "command": "keytool -genkey -v -keystore my-upload-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000",
+            "problemMatcher": []
+        },
+        {
             "label": "Generate Android Bundle",
             "group": "build",
             "type": "shell",

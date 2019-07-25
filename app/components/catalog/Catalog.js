@@ -219,17 +219,25 @@ const styles = StyleSheet.create({
   gridView: {
     marginTop: 5,
     flex: 1,
+    // backgroundColor: 'lightblue',
   },
   itemContainer: {
     justifyContent: 'flex-end',
     borderRadius: 5,
-    padding: 3,
-    height: 100,
+    borderColor: '#000',
+    // padding: 20,
+    width: Dimensions.get('window').width / 3.2,
+    height: Dimensions.get('window').width / 3.2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.8,
-    shadowRadius: 1,
-    elevation: 5,
+    shadowRadius: 50,
+    elevation: 50,
+  },
+  imageObj: {
+    flex: 1,
+    width: undefined,
+    height: undefined
   },
   itemName: {
     fontSize: 12,
@@ -237,14 +245,14 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   itemCode: {
-    fontSize: 16,
-    color: 'white',
+    fontSize: 20,
+    color: '#fff',
     textAlign: "right",
     paddingRight: 3
   },
   priceTag: {
     backgroundColor: 'grey',
-    color: 'white',
+    color: '#fff',
     opacity: 0.8,
     marginLeft: '50%',
     marginTop: '10%',
@@ -457,8 +465,11 @@ class Catalog extends Component {
                     spacing={5}
                     renderItem={({ item, index }) => (
                       <TouchableHighlight key={item.id} onPress={() => this.props.navigation.navigate('DetailTabs', { id: item.id, item: item })}>
-                        <View style={[styles.itemContainer]}>
-                          <ImageBackground source={{ uri: item.imageUrl }} style={{ height: '100%', width: '100%' }} >
+                        <View style={styles.itemContainer}>
+                          <ImageBackground source={{ uri: item.imageUrl }}
+                            style={styles.imageObj}
+                            resizeMode='stretch'
+                             >
                             <View style={styles.priceTag}>
                               <Text style={styles.itemCode}>${item.dailyRate}</Text>
                             </View>

@@ -121,24 +121,22 @@ export default class ItemDetails extends Component {
 
             </View>
             <View style={styles.title}>
-              <View style={{ flexDirection: 'row', marginLeft: 5, marginTop: 8, marginBottom: 15 }}>
-                <View >
-                  <Text style={{ color: 'black', fontSize: 16, marginLeft: 10 }}>{item.title}</Text>
-                  <View style={{ flexDirection: 'row', marginLeft: 10 }}>
+              <View>
+                <View style={{ padding: 10 }} >
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={{ flex: 1, color: 'black', justifyContent: "center", fontSize: 20 }}>{item.title}</Text>
+                    <TouchableOpacity style={styles.btnrent} onPress={() => this.props.navigation.navigate('RequestRental',
+                      { item_id: this.itemId, item: this.state.itemData, post_user: this.state.itemUser })}>
+                      <Text style={styles.textcolorrent}>Rent now</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flexDirection: 'row' }}>
                     <Ionicons name={'ios-pin'} size={18} color={'grey'} />
-                    {this.state.itemLocation
-                      ? (<Text>  {this.state.itemLocation.formattedAddress}  </Text>)
-                      : (<Text>  {"lat:" + item.location.latitude + ",lon:" + item.location.longitude}  </Text>)
-                    }
+                    <Text style={{ flex: 1, color: 'black', fontSize: 16, marginLeft: 10 }} >
+                      {this.state.itemLocation ? this.state.itemLocation.formattedAddress : "lat:" + item.location.latitude + ", lon:" + item.location.longitude}
+                    </Text>
                   </View>
                 </View>
-                <View>
-                  <TouchableOpacity style={styles.btnrent} onPress={() => this.props.navigation.navigate('RequestRental',
-                    { item_id: this.itemId, item: this.state.itemData, post_user: this.state.itemUser })}>
-                    <Text style={styles.textcolorrent}>Rent now</Text>
-                  </TouchableOpacity>
-                </View>
-
               </View>
             </View>
             <View style={styles.boxSummary}>
@@ -217,7 +215,7 @@ export default class ItemDetails extends Component {
               </Text>
             </View>
             <View style={styles.delivery}>
-              <Text style={{ top: 6, marginLeft: 5, color: 'black' }}>
+              <Text style={{ marginLeft: 5, color: 'black' }}>
                 {item.description}
               </Text>
             </View>
@@ -228,11 +226,11 @@ export default class ItemDetails extends Component {
               </Text>
             </View>
             <View style={styles.delivery}>
-              <Text style={{ top: 6, marginLeft: 5, color: 'black' }}>
-                {item.deliveryPickupOption + " is available for this item you can make your selection below after you select dates. \n\n"}
+              <Text style={{ marginLeft: 5, color: 'black' }}>
+                {item.deliveryPickupOption + " is available for this item you can make your selection below after you select dates."}
                 {
                   (item.deliveryPickupOption != "Pickup")
-                    ? "The delivery fee for this item is $" + item.deliveryFee
+                    ? "\n\nThe delivery fee for this item is $" + item.deliveryFee
                     : ""
                 }
               </Text>
@@ -381,7 +379,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     width: '96%',
-    height: 60,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
@@ -391,7 +388,7 @@ const styles = StyleSheet.create({
   boxSummary: {
     backgroundColor: 'white',
     width: '96%',
-    height: 80,
+    padding: 10,
     alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -403,7 +400,7 @@ const styles = StyleSheet.create({
   boxDetails: {
     backgroundColor: 'white',
     width: '96%',
-    height: 80,
+    padding: 10,
     alignSelf: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -431,7 +428,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 5,
     width: '96%',
-    height: 80,
+    padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
@@ -441,7 +438,7 @@ const styles = StyleSheet.create({
   boxSummaryend: {
     backgroundColor: 'white',
     width: '96%',
-    height: 80,
+    padding: 10,
     alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -453,7 +450,7 @@ const styles = StyleSheet.create({
   boxSummaryendr: {
     backgroundColor: 'white',
     width: '96%',
-    height: 150,
+    padding: 10,
     alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
