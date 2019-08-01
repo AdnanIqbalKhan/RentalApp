@@ -1,7 +1,10 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const sgMail = require('@sendgrid/mail');
 admin.initializeApp(functions.config().firebase);
 let db = admin.firestore();
+
+sgMail.setApiKey(functions.config().sendgrid.key);
 
 function getUser(userId) {
     // [START get_document]
@@ -24,6 +27,17 @@ function getUser(userId) {
     return getDoc;
 }
 
+function sendEmail(to, message) {
+    const msg = {
+        to: to,
+        from: 'test@example.com',
+        subject: 'You have a new rent request!',
+        text: message,
+    };
+    sgMail.send(msg)
+        .then(resp => console.log(resp))
+        .catch(err => console.log(err))
+}
 
 exports.sendNotification = functions.firestore
     .document('requests/{requestId}')
@@ -44,7 +58,7 @@ exports.sendNotification = functions.firestore
                 // icon: follower.photoURL
             }
         };
-
+        sendEmail(onwer.email, `${requesterName} is requested for ${postTitle}.`)
         console.log(payload)
         return admin.messaging().sendToDevice(token, payload).then(reponse => {
             return console.log(`A new notification for ${onwer}`);
