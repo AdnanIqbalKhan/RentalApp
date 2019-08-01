@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Image, TextInput, ScrollView,TouchableOpacity,TouchableHighlight, Switch, ImageBackground, KeyboardAvoidingView, ActivityIndicator } from 'react-native';
+import { Platform, StyleSheet, Text, View, Image, TextInput, ScrollView, TouchableOpacity, TouchableHighlight, Switch, ImageBackground, KeyboardAvoidingView, ActivityIndicator } from 'react-native';
 import { Header, Left, Right, Icon, Button, Title, Body } from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FlatGrid } from 'react-native-super-grid';
 import * as theme from '../catalog/theme'
 import { Dropdown } from 'react-native-material-dropdown';
 import { connectFirebase, saveData, getData } from '../../backend/firebase/utility';
-import {_retrieveData} from '../../backend/AsyncFuncs';
+import { _retrieveData } from '../../backend/AsyncFuncs';
+import ImagePicker from "react-native-image-picker";
 import GlobalConst from '../../config/GlobalConst';
 
 
@@ -43,7 +44,24 @@ export default class Profile extends Component {
     this.getData();
   }
 
-  async getData(){
+  selectImage() {
+    ImagePicker.showImagePicker({}, response => {
+      if (response.didCancel) {
+        console.warn("User cancelled image picker");
+      } else if (response.error) {
+        console.warn("ImagePicker Error: ", response.error);
+      } else {
+        const source = { uri: response.uri };
+        // You can also display the image using data:
+        // const source = { uri: "data:image/jpeg;base64," + response.data };
+        this.setState({
+          imageSource: source
+        });
+      }
+    });
+  }
+
+  async getData() {
     this.setState({ loader: true });
     let currentUserId = await _retrieveData(GlobalConst.STORAGE_KEYS.userId);
     let userData = await getData('users', currentUserId);
@@ -53,7 +71,8 @@ export default class Profile extends Component {
       firstName: userData['firstName'] ? userData.firstName : '',
       lastName: userData['lastName'] ? userData.lastName : '',
       companyName: userData['companyName'] ? userData.companyName : '',
-      date: userData['dateJoined'] ? userData.dateJoined.substring(0,15) : 'joining date will appear here',
+      date: userData['dateJoined'] ? userData.dateJoined.substring(0, 15) : 'joining date will appear here',
+      imageUrl: userData['imageUrl'] ? userData['imageUrl'] : require('../../ assets / avatar.png'),
       location: userData['location'] ? userData.location : '',
       pushNotifications: userData['pushNotifications'] ? userData.pushNotifications : false,
       emailNotifications: userData['emailNotifications'] ? userData.emailNotifications : false,
@@ -61,7 +80,7 @@ export default class Profile extends Component {
       paypalAccount: userData['paypalAccount'] ? userData.paypalAccount : '',
       squareAccount: userData['squareAccount'] ? userData.squareAccount : '',
       paymentMethod: userData['paymentMethod'] ? userData.paymentMethod : '',
-     });
+    });
   }
 
   async onPress() {
@@ -81,7 +100,7 @@ export default class Profile extends Component {
     let currentUserId = await _retrieveData(GlobalConst.STORAGE_KEYS.userId);
     await saveData('users', currentUserId, jsonObject);
     this.setState({ loader: false });
-   }
+  }
 
 
   render() {
@@ -94,7 +113,6 @@ export default class Profile extends Component {
     }];
     return (
       <View style={styles.container}>
-
         <View>
           <Header style={{ backgroundColor: '#1b96fe' }}>
             <Left style={{ flex: 1 }}>
@@ -112,19 +130,21 @@ export default class Profile extends Component {
           </Header>
         </View>
 
-        <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps='handled'>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps='handled'>
 
-        {this.state.loader ? <ActivityIndicator size="large" color="#0000ff" /> : null}
+          {this.state.loader ? <ActivityIndicator size="large" color="#0000ff" /> : null}
 
           <KeyboardAvoidingView behavior="padding" enabled>
             <View style={styles.boxSummary}>
               <View style={{ alignItems: 'center', marginTop: 5 }}>
-                <Image source={require('../../assets/avatar.png')} style={{ width: 110, height: 110, borderRadius: 110 }} />
+                <Image source={{ uri: this.state.imageUrl }}
+                  onPress={this.selectImage}
+                  style={{ width: 110, height: 110, borderRadius: 110 }} />
               </View>
               <View style={{ marginTop: 3 }}>
                 <Text style={{ justifyContent: 'center', textAlign: 'center', color: 'black' }}>
                   Name: {this.state.firstName}
-          </Text>
+                </Text>
               </View>
               <View style={{ flexDirection: 'row', textAlign: 'center', justifyContent: 'center' }}>
                 <Text style={styles.avatarRating}>4.5<Ionicons name={'ios-star'} size={14}
@@ -140,7 +160,7 @@ export default class Profile extends Component {
               <View>
                 <Text style={{ justifyContent: 'center', textAlign: 'center', color: 'black' }}>
                   Location : {this.state.location}
-          </Text>
+                </Text>
               </View>
             </View>
             <View>
@@ -151,19 +171,19 @@ export default class Profile extends Component {
             <View style={styles.center}>
               <TextInput placeholder={'first name'} keyboardAppearance='default' autoCapitalize='none'
                 returnKeyType='next' style={styles.textbox1} autoCorrect={false}
-                onChangeText={(firstName) => this.setState({firstName})}
+                onChangeText={(firstName) => this.setState({ firstName })}
                 value={this.state.firstName}
               />
 
               <TextInput placeholder={'last name'} keyboardAppearance='default' autoCapitalize='none'
                 returnKeyType='next' style={styles.textbox} autoCorrect={false}
-                onChangeText={(lastName) => this.setState({lastName})}
+                onChangeText={(lastName) => this.setState({ lastName })}
                 value={this.state.lastName}
               />
 
               <TextInput placeholder={'Company Name(Optional)'} keyboardAppearance='default' autoCapitalize='none'
                 returnKeyType='next' style={styles.textbox} autoCorrect={false}
-                onChangeText={(companyName) => this.setState({companyName})}
+                onChangeText={(companyName) => this.setState({ companyName })}
                 value={this.state.companyName}
               />
 
@@ -178,7 +198,7 @@ export default class Profile extends Component {
                   <View>
                     <Switch style={{ marginLeft: 219 }}
                       value={this.state.location}
-                      onValueChange = {() => this.setState({location: !this.state.location})}
+                      onValueChange={() => this.setState({ location: !this.state.location })}
                     />
 
                   </View>
@@ -191,7 +211,7 @@ export default class Profile extends Component {
                   <View>
                     <Switch style={{ marginLeft: 159 }}
                       value={this.state.pushNotifications}
-                      onValueChange = {() => this.setState({pushNotifications: !this.state.pushNotifications})}
+                      onValueChange={() => this.setState({ pushNotifications: !this.state.pushNotifications })}
                     />
 
                   </View>
@@ -204,7 +224,7 @@ export default class Profile extends Component {
                   <View>
                     <Switch style={{ marginLeft: 155 }}
                       value={this.state.emailNotifications}
-                      onValueChange = {() => this.setState({emailNotifications: !this.state.emailNotifications})}
+                      onValueChange={() => this.setState({ emailNotifications: !this.state.emailNotifications })}
                     />
 
                   </View>
@@ -217,7 +237,7 @@ export default class Profile extends Component {
                   <View>
                     <Switch style={{ marginLeft: 165 }}
                       value={this.state.textNotifications}
-                      onValueChange = {() => this.setState({textNotifications: !this.state.textNotifications})}
+                      onValueChange={() => this.setState({ textNotifications: !this.state.textNotifications })}
                     />
 
                   </View>
@@ -232,7 +252,7 @@ export default class Profile extends Component {
                   </View>
 
                 </View>
-                <View style={{ flexDirection: 'row', marginLeft: 5, marginTop: 8 ,marginBottom:15}}>
+                <View style={{ flexDirection: 'row', marginLeft: 5, marginTop: 8, marginBottom: 15 }}>
                   <View >
                     <Text style={{ color: 'black', fontSize: 16, marginLeft: 10 }}>Verify Account:</Text>
                   </View>
@@ -261,10 +281,10 @@ export default class Profile extends Component {
                     <Text style={{ color: 'black', fontSize: 15, marginLeft: 10, marginTop: 4, }}>PayPal Account:</Text>
                   </View>
                   <View>
-                  <TextInput placeholder={'PayPal account'} keyboardAppearance='default' autoCapitalize='none'
-                    returnKeyType='next' style={styles.textbox3} autoCorrect={false}
-                    onChangeText={(paypalAccount) => this.setState({paypalAccount})}
-                  />
+                    <TextInput placeholder={'PayPal account'} keyboardAppearance='default' autoCapitalize='none'
+                      returnKeyType='next' style={styles.textbox3} autoCorrect={false}
+                      onChangeText={(paypalAccount) => this.setState({ paypalAccount })}
+                    />
 
                   </View>
 
@@ -274,28 +294,28 @@ export default class Profile extends Component {
                     <Text style={{ color: 'black', fontSize: 15, marginLeft: 10, marginTop: 4, }}>Square Account:</Text>
                   </View>
                   <View>
-                  <TextInput placeholder={'Square Account'} keyboardAppearance='default' autoCapitalize='none'
-                    returnKeyType='next' style={styles.textbox2} autoCorrect={false}
-                    onChangeText={(squareAccount) => this.setState({squareAccount})}
-                  />
+                    <TextInput placeholder={'Square Account'} keyboardAppearance='default' autoCapitalize='none'
+                      returnKeyType='next' style={styles.textbox2} autoCorrect={false}
+                      onChangeText={(squareAccount) => this.setState({ squareAccount })}
+                    />
 
                   </View>
 
                 </View>
-              <View style ={styles.PickerStyle}>
-              <Dropdown
-                label={this.state.paymentMethod == undefined ? 'Select Payment Method' : this.state.paymentMethod}
-                data={data}
-                onChangeText={(value, index, data) => this.setState({ paymentMethod: data[index].value })}
-              />
-            </View>
-            </View>
+                <View style={styles.PickerStyle}>
+                  <Dropdown
+                    label={this.state.paymentMethod == undefined ? 'Select Payment Method' : this.state.paymentMethod}
+                    data={data}
+                    onChangeText={(value, index, data) => this.setState({ paymentMethod: data[index].value })}
+                  />
+                </View>
+              </View>
 
-            {this.state.loader ? <ActivityIndicator size="large" color="#0000ff" /> : null}
+              {this.state.loader ? <ActivityIndicator size="large" color="#0000ff" /> : null}
 
-            <TouchableOpacity style={styles.btn2} onPress={() => this.onPress()}>
-              <Text style={styles.textcolor2} >SAVE</Text>
-            </TouchableOpacity>
+              <TouchableOpacity style={styles.btn2} onPress={() => this.onPress()}>
+                <Text style={styles.textcolor2} >SAVE</Text>
+              </TouchableOpacity>
 
 
             </View>
@@ -372,7 +392,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'left',
     width: 200,
-    marginLeft:5,
+    marginLeft: 5,
     borderColor: '#c0c3c3',
     borderWidth: 1,
     backgroundColor: '#FFF',
@@ -380,7 +400,7 @@ const styles = StyleSheet.create({
     padding: 10,
     color: "#000000",
   },
-  textbox3:{
+  textbox3: {
     alignItems: 'center', justifyContent: 'center',
     alignSelf: 'center',
     marginTop: 2,
@@ -388,7 +408,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'left',
     width: 200,
-   marginLeft:7,
+    marginLeft: 7,
 
     borderColor: '#c0c3c3',
     borderWidth: 1,
@@ -424,15 +444,15 @@ const styles = StyleSheet.create({
   textcolor: {
     color: '#1b96fe',
     fontSize: 14,
-    textAlign:'center',
+    textAlign: 'center',
     justifyContent: 'center',
-    alignSelf:'center',
+    alignSelf: 'center',
   },
   textcolor2: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-    textAlign:'center',
+    textAlign: 'center',
     justifyContent: 'center',
   },
   btn: {
@@ -441,7 +461,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: 67,
     height: 22,
-    borderColor:'#1b96fe',
+    borderColor: '#1b96fe',
     borderRadius: 5
   },
   btn2: {
@@ -455,11 +475,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 25
   },
-  PickerStyle:{
-    width:'96%',
-    marginTop:5,
-    marginLeft:6,
-    borderRadius:5
+  PickerStyle: {
+    width: '96%',
+    marginTop: 5,
+    marginLeft: 6,
+    borderRadius: 5
   }
 
 

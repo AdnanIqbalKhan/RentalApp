@@ -122,9 +122,9 @@ const HomeTabNavigator = createMaterialBottomTabNavigator({
   Catalog: {
     screen: ItemDetailStack,
     navigationOptions: {
-      tabBarLabel: 'Catalog',
+      tabBarLabel: 'Home',
       tabBarIcon: ({ tintColor }) => (
-        <Ionicons name="ios-star" color={tintColor} size={26} />
+        <Ionicons name="ios-home" color={tintColor} size={26} />
       )
     }
   },
