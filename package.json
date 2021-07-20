@@ -15,7 +15,7 @@
     "native-base": "^2.12.1",
     "react": "16.8.3",
     "react-moment": "^0.9.2",
-    "react-native": "0.59.9",
+    "react-native": "0.62.3",
     "react-native-calendar-picker": "^6.0.1",
     "react-native-calendars": "^1.151.0",
     "react-native-camera": "git+https://git@github.com/react-native-community/react-native-camera.git",
